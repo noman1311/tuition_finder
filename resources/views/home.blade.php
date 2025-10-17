@@ -413,20 +413,32 @@
             
             <nav>
                 <ul class="nav-menu">
-                    <li><a href="{{ route('my.posts') }}">MY Posts</a></li>
-                    <li><a href="{{ route('find.tutors') }}">Find Tutors</a></li>
-                    <li><a href="{{ route('wallets') }}">Wallets</a></li>
-                    <li><a href="{{ route('requirements.create') }}">Post Requirements</a></li>
-                    <li><a href="{{ route('notifications') }}">Notifications</a></li>
+                    @auth
+                        <li><a href="{{ route('my.posts') }}">MY Posts</a></li>
+                        <li><a href="{{ route('requirements.create') }}">Post Requirements</a></li>
+                        <li><a href="{{ route('find.tutors') }}">Find Tutors</a></li>
+                        <li><a href="{{ route('notifications') }}">Notifications</a></li>
+                    @endauth
                 </ul>
             </nav>
 
-            <div class="user-menu">
+            <div class="user-menu" style="position: relative;">
                 @if(Auth::check())
-                    <form method="POST" action="{{ route('logout') }}">
-                        @csrf
-                        <button type="submit" class="btn btn-outline">Logout</button>
-                    </form>
+                    <div class="user-profile" id="userMenuTrigger" style="cursor:pointer;">
+                        <div class="user-avatar">{{ strtoupper(substr(Auth::user()->username,0,1)) }}</div>
+                        <span>{{ Auth::user()->username }}</span>
+                    </div>
+                    <div id="userDropdown" style="display:none; position:absolute; right:0; top:56px; background:#fff; border:1px solid #e5e7eb; border-radius:8px; box-shadow:0 8px 20px rgba(0,0,0,.08); min-width:180px;">
+                        @if(Auth::user()->role === 'student')
+                            <a href="{{ route('student.profile.edit') }}" style="display:block; padding:10px 12px; color:#111827; text-decoration:none;">Edit profile</a>
+                        @else
+                            <a href="{{ route('teacher.profile.edit') }}" style="display:block; padding:10px 12px; color:#111827; text-decoration:none;">Edit profile</a>
+                        @endif
+                        <form method="POST" action="{{ route('logout') }}" style="margin:0;">
+                            @csrf
+                            <button type="submit" style="width:100%; text-align:left; padding:10px 12px; background:none; border:none; cursor:pointer; color:#111827;">Logout</button>
+                        </form>
+                    </div>
                 @else
                     <a href="{{ route('login') }}" class="btn btn-outline">Login / Signup</a>
                 @endif
@@ -451,7 +463,7 @@
             <h1>Find the Perfect Tutor for You</h1>
             <p>Connect with qualified tutors in your area and get personalized learning experiences</p>
             
-            <form class="search-form" action="/search" method="GET">
+            <form class="search-form" action="/search" method="GET" @if(!Auth::check()) onsubmit="event.preventDefault(); window.location='{{ route('login') }}'" @endif>
                 <div class="search-row">
                     <input type="text" name="location" class="search-input" placeholder="Enter your location..." value="{{ request('location') }}">
                     <input type="text" name="subject" class="search-input" placeholder="Enter subject or topic..." value="{{ request('subject') }}">
@@ -471,7 +483,7 @@
             
             <div class="topics-grid">
                 @forelse($topics as $topic)
-                    <div class="topic-card" onclick="searchByTopic('{{ $topic }}')">
+                    <div class="topic-card" @if(!Auth::check()) onclick="window.location='{{ route('login') }}'" @else onclick="searchByTopic('{{ $topic }}')" @endif>
                         <div class="topic-icon">
                             @if(str_contains(strtolower($topic), 'math'))
                                 <i class="fas fa-calculator"></i>
@@ -529,7 +541,7 @@
             
             <div class="posts-grid">
                 @forelse($recentPosts as $post)
-                    <div class="post-card">
+                    <div class="post-card" @if(!Auth::check()) onclick="window.location='{{ route('login') }}'" @endif style="cursor:pointer;">
                         <div class="post-header">
                             <div>
                                 <h3 class="post-title">{{ $post->title }}</h3>
@@ -548,7 +560,7 @@
                         </div>
                     </div>
                 @empty
-                    <div class="post-card">
+                    <div class="post-card" @if(!Auth::check()) onclick="window.location='{{ route('login') }}'" @endif style="cursor:pointer;">
                         <h3 class="post-title">Mathematics Tutoring Needed</h3>
                         <span class="post-subject">Mathematics</span>
                         <p class="post-description">Looking for a qualified math tutor to help with calculus and algebra...</p>
@@ -592,11 +604,18 @@
         function performStickySearch() {
             const location = document.getElementById('stickyLocation').value;
             const subject = document.getElementById('stickySubject').value;
-            
+
             const url = new URL('/search', window.location.origin);
             if (location) url.searchParams.set('location', location);
             if (subject) url.searchParams.set('subject', subject);
-            
+
+            // If guest, redirect to login instead of search
+            const isGuest = {{ auth()->check() ? 'false' : 'true' }};
+            if (isGuest) {
+                window.location.href = '{{ route('login') }}';
+                return;
+            }
+
             window.location.href = url.toString();
         }
 
@@ -616,6 +635,19 @@
             if (mainSubject && stickySubject) {
                 mainSubject.addEventListener('input', function() {
                     stickySubject.value = this.value;
+                });
+            }
+
+            // User menu dropdown
+            const trigger = document.getElementById('userMenuTrigger');
+            const dropdown = document.getElementById('userDropdown');
+            if (trigger && dropdown) {
+                trigger.addEventListener('click', function(e){
+                    e.stopPropagation();
+                    dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
+                });
+                document.addEventListener('click', function(){
+                    dropdown.style.display = 'none';
                 });
             }
         });
