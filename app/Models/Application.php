@@ -20,6 +20,17 @@ class Application extends Model
         'status',
         'message',
     ];
+
+    // Relationships
+    public function tuitionOffer()
+    {
+        return $this->belongsTo(Post::class, 'offer_id', 'offer_id');
+    }
+
+    public function teacher()
+    {
+        return $this->belongsTo(Teacher::class, 'teacher_id', 'teacher_id');
+    }
 }
 
 

@@ -34,4 +34,15 @@ class Teacher extends Model
         'experience' => 'int',
         'coins' => 'int',
     ];
+
+    // Relationships
+    public function applications()
+    {
+        return $this->hasMany(Application::class, 'teacher_id', 'teacher_id');
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id', 'user_id');
+    }
 }

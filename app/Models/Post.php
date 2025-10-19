@@ -30,4 +30,15 @@ class Post extends Model
     protected $casts = [
         'salary' => 'decimal:2',
     ];
+
+    // Relationships
+    public function applications()
+    {
+        return $this->hasMany(Application::class, 'offer_id', 'offer_id');
+    }
+
+    public function student()
+    {
+        return $this->belongsTo(Student::class, 'student_id', 'student_id');
+    }
 }
