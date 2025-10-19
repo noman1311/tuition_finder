@@ -120,13 +120,14 @@ class LoginController extends Controller
         ]);
 
         // Convert subject expertise string to array
-        $expertise = array_map('trim', explode(',', $data['subject_expertise']));
+        // The model's cast will automatically handle JSON encoding
+        $data['subject_expertise'] = array_map('trim', explode(',', $data['subject_expertise']));
 
         Teacher::create([
             'user_id' => Auth::id(),
             'name' => $data['name'],
             'gender' => $data['gender'],
-            'subject_expertise' => json_encode($expertise),
+            'subject_expertise' => $data['subject_expertise'],
             'experience' => $data['experience'],
             'location' => $data['location'],
             'preferred_type' => $data['preferred_type'],
@@ -176,8 +177,8 @@ class LoginController extends Controller
         ]);
 
         // Convert subject expertise string to array
-        $expertise = array_map('trim', explode(',', $data['subject_expertise']));
-        $data['subject_expertise'] = json_encode($expertise);
+        // The model's cast will automatically handle JSON encoding
+        $data['subject_expertise'] = array_map('trim', explode(',', $data['subject_expertise']));
 
         $teacher->update($data);
         return redirect()->route('teacher.dashboard')->with('success', 'Profile updated successfully!');
