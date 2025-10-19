@@ -55,6 +55,11 @@
                 <input id="experience" name="experience" type="number" value="{{ old('experience') }}" min="0" required>
             </div>
             <div class="form-group">
+                <label for="current_education_institution">Current Education Institution</label>
+                <input id="current_education_institution" name="current_education_institution" type="text" value="{{ old('current_education_institution') }}" placeholder="e.g., University of Dhaka, MIT, Harvard University">
+                <div class="help-text">Your current educational institution or workplace</div>
+            </div>
+            <div class="form-group">
                 <label for="location">Location</label>
                 <input id="location" name="location" type="text" value="{{ old('location') }}" placeholder="City, Area" required>
             </div>

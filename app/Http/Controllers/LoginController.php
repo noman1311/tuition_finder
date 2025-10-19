@@ -114,6 +114,7 @@ class LoginController extends Controller
             'gender' => ['required', 'in:male,female'],
             'subject_expertise' => ['required', 'string'],
             'experience' => ['required', 'integer', 'min:0'],
+            'current_education_institution' => ['nullable', 'string', 'max:200'],
             'location' => ['required', 'string', 'max:100'],
             'preferred_type' => ['required', 'in:online,offline,both'],
             'description' => ['nullable', 'string'],
@@ -171,6 +172,7 @@ class LoginController extends Controller
             'gender' => ['required', 'in:male,female'],
             'subject_expertise' => ['required', 'string'],
             'experience' => ['required', 'integer', 'min:0'],
+            'current_education_institution' => ['nullable', 'string', 'max:200'],
             'location' => ['required', 'string', 'max:100'],
             'preferred_type' => ['required', 'in:online,offline,both'],
             'description' => ['nullable', 'string'],
@@ -182,6 +184,26 @@ class LoginController extends Controller
 
         $teacher->update($data);
         return redirect()->route('teacher.dashboard')->with('success', 'Profile updated successfully!');
+    }
+
+    public function switchToStudent()
+    {
+        // Update user role to student
+        $user = Auth::user();
+        $user->role = 'student/parent';
+        $user->save();
+        
+        return redirect()->route('home')->with('success', 'Switched to student view');
+    }
+
+    public function switchToTeacher()
+    {
+        // Update user role to teacher
+        $user = Auth::user();
+        $user->role = 'teacher';
+        $user->save();
+        
+        return redirect()->route('teacher.dashboard')->with('success', 'Switched to teacher view');
     }
 
     public function logout(Request $request)

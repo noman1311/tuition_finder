@@ -39,6 +39,10 @@ Route::middleware('auth')->group(function () {
     Route::get('/teacher/profile/edit', [LoginController::class, 'editTeacherProfile'])->name('teacher.profile.edit');
     Route::post('/teacher/profile/update', [LoginController::class, 'updateTeacherProfile'])->name('teacher.profile.update');
     
+    // Role switching for teachers
+    Route::get('/switch-to-student', [LoginController::class, 'switchToStudent'])->name('switch.to.student');
+    Route::get('/switch-to-teacher', [LoginController::class, 'switchToTeacher'])->name('switch.to.teacher');
+    
     // Teacher dashboard and jobs
     Route::get('/teacher/dashboard', [App\Http\Controllers\TeacherController::class, 'dashboard'])->name('teacher.dashboard');
     Route::get('/teacher/jobs/my-jobs', [App\Http\Controllers\TeacherController::class, 'myJobs'])->name('teacher.jobs.my');
