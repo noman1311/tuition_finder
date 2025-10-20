@@ -10,6 +10,17 @@ use App\Models\Application;
 
 class TeacherController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+        $this->middleware(function ($request, $next) {
+            if (Auth::user()->role !== 'teacher') {
+                return redirect()->route('home')->withErrors(['error' => 'Access denied. Only teachers can access this area.']);
+            }
+            return $next($request);
+        });
+    }
+
     public function dashboard()
     {
         $teacher = Teacher::where('user_id', Auth::id())->firstOrFail();

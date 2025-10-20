@@ -62,9 +62,9 @@ CREATE TABLE transactions (
 );
 
 -- Tuition offers table
-CREATE TABLE tuition_offer (
+CREATE TABLE tuition_offers (
     offer_id INT AUTO_INCREMENT PRIMARY KEY,
-    student_id INT NOT NULL,
+    student_id BIGINT(20) UNSIGNED,
     subject VARCHAR(100) NOT NULL,
     class_level VARCHAR(50) NOT NULL,
     location VARCHAR(100) NOT NULL,

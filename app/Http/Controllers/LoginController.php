@@ -29,18 +29,20 @@ class LoginController extends Controller
             $request->session()->regenerate();
             
             // Check if user has completed their profile
-            if ($user->role === 'student' && !$user->student) {
+            if ($user->role === 'student/parent' && !$user->student) {
                 return redirect()->route('student.profile');
             } elseif ($user->role === 'teacher' && !$user->teacher) {
                 return redirect()->route('teacher.profile');
             }
             
-            // Redirect to appropriate dashboard
+            // Set default view mode and redirect to appropriate dashboard
             if ($user->role === 'teacher') {
+                session(['current_view' => 'teacher']);
                 return redirect()->route('teacher.dashboard');
+            } else {
+                session(['current_view' => 'student']);
+                return redirect()->intended(route('home'));
             }
-            
-            return redirect()->intended(route('home'));
         }
 
         return back()->withErrors([
@@ -99,6 +101,8 @@ class LoginController extends Controller
             'location' => $data['location'],
         ]);
 
+        // Set student view mode
+        session(['current_view' => 'student']);
         return redirect()->route('home')->with('success', 'Profile completed successfully!');
     }
 
@@ -135,7 +139,9 @@ class LoginController extends Controller
             'description' => $data['description'] ?? '',
         ]);
 
-        return redirect()->route('home')->with('success', 'Profile completed successfully!');
+        // Set teacher view mode and redirect to teacher dashboard
+        session(['current_view' => 'teacher']);
+        return redirect()->route('teacher.dashboard')->with('success', 'Profile completed successfully!');
     }
 
     public function editStudentProfile()
@@ -188,20 +194,30 @@ class LoginController extends Controller
 
     public function switchToStudent()
     {
-        // Update user role to student
+        // Store current view mode in session instead of changing user role
         $user = Auth::user();
-        $user->role = 'student/parent';
-        $user->save();
+        
+        // Only allow teachers to switch to student view
+        if ($user->role !== 'teacher') {
+            return redirect()->back()->withErrors(['error' => 'Only teachers can switch to student view']);
+        }
+        
+        session(['current_view' => 'student']);
         
         return redirect()->route('home')->with('success', 'Switched to student view');
     }
 
     public function switchToTeacher()
     {
-        // Update user role to teacher
+        // Switch back to teacher view
         $user = Auth::user();
-        $user->role = 'teacher';
-        $user->save();
+        
+        // Only allow teachers to switch back
+        if ($user->role !== 'teacher') {
+            return redirect()->back()->withErrors(['error' => 'Access denied']);
+        }
+        
+        session(['current_view' => 'teacher']);
         
         return redirect()->route('teacher.dashboard')->with('success', 'Switched to teacher view');
     }

@@ -19,6 +19,7 @@ class Application extends Model
         'teacher_id',
         'status',
         'message',
+        'application_date',
     ];
 
     // Relationships

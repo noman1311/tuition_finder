@@ -62,6 +62,7 @@
                     <span>{{ Auth::user()->username }}</span>
                 </div>
                 <div class="dropdown" id="userDropdown">
+                    <a href="{{ route('switch.to.student') }}">Switch to Student View</a>
                     <a href="{{ route('teacher.profile.edit') }}">Edit Profile</a>
                     <form method="POST" action="{{ route('logout') }}">
                         @csrf

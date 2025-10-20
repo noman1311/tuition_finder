@@ -430,14 +430,18 @@
                     </div>
                     <div id="userDropdown" style="display:none; position:absolute; right:0; top:56px; background:#fff; border:1px solid #e5e7eb; border-radius:8px; box-shadow:0 8px 20px rgba(0,0,0,.08); min-width:180px;">
                         @if(Auth::user()->role === 'teacher')
-                            <div style="padding:8px 12px; background:#f8fafc; border-bottom:1px solid #e5e7eb; font-size:12px; color:#6b7280; font-weight:600;">SWITCH ROLE</div>
-                            <a href="{{ route('switch.to.student') }}" style="display:block; padding:10px 12px; color:#111827; text-decoration:none;">Student/Client</a>
-                            <a href="{{ route('switch.to.teacher') }}" style="display:block; padding:10px 12px; color:#111827; text-decoration:none;">Teacher</a>
+                            <div style="padding:8px 12px; background:#f8fafc; border-bottom:1px solid #e5e7eb; font-size:12px; color:#6b7280; font-weight:600;">DASHBOARD</div>
+                            <a href="{{ route('teacher.dashboard') }}" style="display:block; padding:10px 12px; color:#111827; text-decoration:none;">Teacher Dashboard</a>
+                            @if(session('current_view') === 'teacher')
+                                <a href="{{ route('switch.to.student') }}" style="display:block; padding:10px 12px; color:#111827; text-decoration:none;">Switch to Student View</a>
+                            @else
+                                <a href="{{ route('switch.to.teacher') }}" style="display:block; padding:10px 12px; color:#111827; text-decoration:none;">Switch to Teacher View</a>
+                            @endif
                             <div style="border-top:1px solid #e5e7eb; margin:4px 0;"></div>
                         @endif
-                        @if(Auth::user()->role === 'student' || Auth::user()->role === 'student/parent')
+                        @if(Auth::user()->role === 'student/parent' || (Auth::user()->role === 'teacher' && session('current_view') === 'student'))
                             <a href="{{ route('student.profile.edit') }}" style="display:block; padding:10px 12px; color:#111827; text-decoration:none;">Edit profile</a>
-                        @else
+                        @elseif(Auth::user()->role === 'teacher')
                             <a href="{{ route('teacher.profile.edit') }}" style="display:block; padding:10px 12px; color:#111827; text-decoration:none;">Edit profile</a>
                         @endif
                         <form method="POST" action="{{ route('logout') }}" style="margin:0;">
