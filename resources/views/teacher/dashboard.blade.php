@@ -44,7 +44,7 @@
                 <ul class="nav-menu">
                     <li><a href="{{ route('teacher.dashboard') }}" class="active">Dashboard</a></li>
                     <li><a href="{{ route('teacher.jobs.my') }}">Jobs</a></li>
-                    <li><a href="{{ route('wallets') }}">Wallet</a></li>
+                    <li><a href="{{ route('wallet.index') }}">Wallet</a></li>
                     <li><a href="{{ route('teacher.profile.edit') }}">Edit Profile</a></li>
                 </ul>
             </nav>

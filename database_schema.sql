@@ -49,16 +49,25 @@ CREATE TABLE students (
     FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE
 );
 
--- Transactions table
+-- Transactions table (Updated for wallet feature - simplified without approval system)
 CREATE TABLE transactions (
     transaction_id INT AUTO_INCREMENT PRIMARY KEY,
     user_id INT NOT NULL,
+    account_number VARCHAR(50) NULL COMMENT 'Payment account number - NULL for non-wallet transactions',
     amount DECIMAL(10,2) NOT NULL,
     type ENUM('bkash', 'rocket', 'banking', 'nagad') NOT NULL,
-    description TEXT,
+    description TEXT NULL,
     transaction_date DATE NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    
+    -- Foreign key constraint
+    FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE,
+    
+    -- Indexes for better performance
+    INDEX idx_user_id (user_id),
+    INDEX idx_account_number (account_number),
+    INDEX idx_created_at (created_at)
 );
 
 -- Tuition offers table

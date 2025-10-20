@@ -58,9 +58,15 @@ Route::middleware('auth')->group(function () {
     Route::get('/my-posts', [OfferController::class, 'index'])->name('my.posts');
 });
 
+// Wallet routes - Protected
+Route::middleware('auth')->group(function () {
+    Route::get('/wallet', [App\Http\Controllers\WalletController::class, 'index'])->name('wallet.index');
+    Route::get('/wallet/add-funds', [App\Http\Controllers\WalletController::class, 'create'])->name('wallet.add-funds');
+    Route::post('/wallet/add-funds', [App\Http\Controllers\WalletController::class, 'store'])->name('wallet.store');
+});
+
 // Simple placeholders - protected
 Route::middleware('auth')->group(function () {
     Route::view('/find-tutors', 'find-tutors')->name('find.tutors');
-    Route::view('/wallets', 'wallets')->name('wallets');
     Route::view('/notifications', 'notifications')->name('notifications');
 });
