@@ -417,7 +417,16 @@
                         <li><a href="{{ route('my.posts') }}">MY Posts</a></li>
                         <li><a href="{{ route('requirements.create') }}">Post Requirements</a></li>
                         <li><a href="{{ route('find.tutors') }}">Find Tutors</a></li>
-                        <li><a href="{{ route('notifications') }}">Notifications</a></li>
+                        <li>
+                            <a href="{{ route('notifications.index') }}">
+                                Notifications
+                                @if(Auth::user()->unread_notifications_count > 0)
+                                    <span style="background: #ef4444; color: white; font-size: 10px; padding: 2px 6px; border-radius: 10px; margin-left: 4px;">
+                                        {{ Auth::user()->unread_notifications_count }}
+                                    </span>
+                                @endif
+                            </a>
+                        </li>
                     @endauth
                 </ul>
             </nav>

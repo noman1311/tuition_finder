@@ -69,4 +69,24 @@ class User extends Authenticatable
     {
         return $this->hasMany(Transaction::class, 'user_id', 'user_id')->whereNotNull('account_number');
     }
+
+    public function notifications()
+    {
+        return $this->hasMany(Notification::class, 'user_id', 'user_id');
+    }
+
+    public function unreadNotifications()
+    {
+        return $this->hasMany(Notification::class, 'user_id', 'user_id')->where('is_read', false);
+    }
+
+    // Helper method to safely get unread notifications count
+    public function getUnreadNotificationsCountAttribute()
+    {
+        try {
+            return $this->unreadNotifications()->count();
+        } catch (\Exception $e) {
+            return 0;
+        }
+    }
 }

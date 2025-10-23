@@ -65,8 +65,16 @@ Route::middleware('auth')->group(function () {
     Route::post('/wallet/add-funds', [App\Http\Controllers\WalletController::class, 'store'])->name('wallet.store');
 });
 
+// Notification routes - Protected
+Route::middleware('auth')->group(function () {
+    Route::get('/notifications', [App\Http\Controllers\NotificationController::class, 'index'])->name('notifications.index');
+    Route::post('/notifications/{id}/read', [App\Http\Controllers\NotificationController::class, 'markAsRead'])->name('notifications.mark-read');
+    Route::get('/notifications/mark-all-read', [App\Http\Controllers\NotificationController::class, 'markAllAsRead'])->name('notifications.mark-all-read');
+    Route::get('/notifications/unread-count', [App\Http\Controllers\NotificationController::class, 'getUnreadCount'])->name('notifications.unread-count');
+    Route::get('/notifications/recent', [App\Http\Controllers\NotificationController::class, 'getRecent'])->name('notifications.recent');
+});
+
 // Simple placeholders - protected
 Route::middleware('auth')->group(function () {
     Route::view('/find-tutors', 'find-tutors')->name('find.tutors');
-    Route::view('/notifications', 'notifications')->name('notifications');
 });

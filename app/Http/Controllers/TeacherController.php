@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\Teacher;
 use App\Models\Post;
 use App\Models\Application;
+use App\Services\NotificationService;
 
 class TeacherController extends Controller
 {
@@ -126,14 +127,18 @@ class TeacherController extends Controller
             $teacher->decrement('coins', $applicationCost);
 
             // Create application
-            Application::create([
+            $application = Application::create([
                 'offer_id' => $offerId,
                 'teacher_id' => $teacher->teacher_id,
                 'message' => $request->message,
                 'status' => 'pending'
             ]);
 
-            return back()->with('success', "Application submitted successfully! {$applicationCost} coins deducted from your wallet. You can now see the full contact details.");
+            // Create notification for the student
+            $notificationService = new NotificationService();
+            $notificationService->createJobApplicationNotification($application);
+
+            return back()->with('success', "Application submitted successfully! {$applicationCost} coins deducted from your wallet. You can now see the full contact details. The student has been notified of your application.");
         } catch (\Exception $e) {
             // If application creation fails, refund the coins
             $teacher->increment('coins', $applicationCost);
