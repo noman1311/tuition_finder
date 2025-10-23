@@ -40,6 +40,10 @@
         .job-description { color: #374151; line-height: 1.6; margin-bottom: 15px; }
         .apply-btn { background: #059669; color: white; border: none; padding: 8px 16px; border-radius: 6px; font-weight: 500; cursor: pointer; }
         .apply-btn:hover { background: #047857; }
+        .status-badge { padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 500; }
+        .status-pending { background: #fef3c7; color: #d97706; }
+        .status-accepted { background: #d1fae5; color: #059669; }
+        .status-rejected { background: #fee2e2; color: #dc2626; }
         .no-jobs { text-align: center; padding: 60px 20px; color: #6b7280; }
         .pagination { display: flex; justify-content: center; margin-top: 30px; }
         .pagination a { padding: 8px 16px; margin: 0 4px; background: white; color: #2563eb; text-decoration: none; border-radius: 6px; border: 1px solid #e2e8f0; }
@@ -93,7 +97,7 @@
     <div class="container">
         <div class="page-header">
             <h1>All Teaching Jobs</h1>
-            <p>Browse all available teaching opportunities</p>
+            <p>Browse all available teaching opportunities ({{ $jobs->total() }} jobs available for you to apply)</p>
         </div>
 
         <div class="filters">
@@ -113,20 +117,49 @@
         </div>
 
         @forelse($jobs as $job)
+            @php
+                // Check if teacher has applied for this job
+                $application = $job->applications->where('teacher_id', $teacher->teacher_id)->first();
+                $hasApplied = $application !== null;
+            @endphp
+            
             <div class="job-card">
                 <div class="job-header">
                     <div>
                         <h3 class="job-title">{{ $job->subject }} - {{ $job->class_level }}</h3>
                         <span class="job-subject">{{ $job->type }}</span>
                     </div>
+                    @if($hasApplied)
+                        <span class="status-badge status-{{ $application->status }}">Applied - {{ ucfirst($application->status) }}</span>
+                    @endif
                 </div>
                 <div class="job-meta">
                     <i class="fas fa-map-marker-alt"></i> {{ $job->location }} • 
                     <i class="fas fa-clock"></i> {{ $job->preferred_type }} • 
-                    <i class="fas fa-dollar-sign"></i> ৳{{ number_format($job->salary, 2) }}/hr
+                    <i class="fas fa-dollar-sign"></i> ৳{{ number_format($job->salary, 2) }}/hr •
+                    <i class="fas fa-phone"></i> 
+                    @if($hasApplied)
+                        {{ $job->formatted_phone }}
+                    @else
+                        {{ $job->hidden_phone }}
+                    @endif
                 </div>
                 <div class="job-description">{{ $job->description }}</div>
-                <button class="apply-btn" onclick="openApplyModal({{ $job->offer_id }})">Apply Now</button>
+                @if(!$hasApplied)
+                    @if($teacher->coins >= config('tuition.application_cost', 10))
+                        <button class="apply-btn" onclick="openApplyModal({{ $job->offer_id }})">
+                            Apply Now ({{ config('tuition.application_cost', 10) }} coins)
+                        </button>
+                    @else
+                        <div style="margin-top: 12px; padding: 8px 12px; background: #fee2e2; border-radius: 6px; color: #dc2626; font-size: 14px;">
+                            <i class="fas fa-exclamation-triangle"></i> Can't apply - Not enough coins (Need {{ config('tuition.application_cost', 10) }} coins)
+                        </div>
+                    @endif
+                @else
+                    <div style="margin-top: 12px; padding: 8px 12px; background: #f8fafc; border-radius: 6px; font-size: 14px; color: #6b7280;">
+                        Applied on {{ $application->created_at->format('M d, Y') }} - Full contact details revealed
+                    </div>
+                @endif
             </div>
         @empty
             <div class="no-jobs">
@@ -148,13 +181,25 @@
                 <h3>Apply for Job</h3>
                 <span class="close" onclick="closeApplyModal()">&times;</span>
             </div>
+            <div style="background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 8px; padding: 12px; margin-bottom: 20px;">
+                <div style="display: flex; align-items: center; gap: 8px; color: #1e40af;">
+                    <i class="fas fa-info-circle"></i>
+                    <strong>Application Cost: {{ config('tuition.application_cost', 10) }} coins</strong>
+                </div>
+                <p style="margin: 8px 0 0 0; font-size: 14px; color: #1e3a8a;">
+                    After applying, you'll get access to the full phone number and can contact the student directly.
+                </p>
+                <p style="margin: 4px 0 0 0; font-size: 14px; color: #1e3a8a;">
+                    Your current balance: <strong>{{ $teacher->coins }} coins</strong>
+                </p>
+            </div>
             <form id="applyForm" method="POST">
                 @csrf
                 <div class="form-group">
                     <label for="message">Application Message</label>
                     <textarea name="message" id="message" placeholder="Tell the student why you're the right fit for this job..." required></textarea>
                 </div>
-                <button type="submit" class="modal-btn">Submit Application</button>
+                <button type="submit" class="modal-btn">Submit Application ({{ config('tuition.application_cost', 10) }} coins)</button>
                 <button type="button" class="modal-btn secondary" onclick="closeApplyModal()">Cancel</button>
             </form>
         </div>
@@ -176,19 +221,51 @@
 
         // Apply modal
         function openApplyModal(offerId) {
+            // Check if teacher has enough coins (this is also checked server-side)
+            const teacherCoins = {{ $teacher->coins }};
+            const applicationCost = {{ config('tuition.application_cost', 10) }};
+            
+            if (teacherCoins < applicationCost) {
+                alert(`You don't have enough coins to apply. You need ${applicationCost} coins but only have ${teacherCoins} coins.`);
+                return;
+            }
+            
             document.getElementById('applyForm').action = '{{ route("teacher.apply", ":id") }}'.replace(':id', offerId);
             document.getElementById('applyModal').style.display = 'block';
+            // Reset submit button
+            const submitBtn = document.querySelector('#applyForm button[type="submit"]');
+            if (submitBtn) {
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Submit Application ({{ config('tuition.application_cost', 10) }} coins)';
+            }
         }
 
         function closeApplyModal() {
             document.getElementById('applyModal').style.display = 'none';
+            document.getElementById('message').value = '';
         }
+
+        // Prevent double submission
+        document.addEventListener('DOMContentLoaded', function() {
+            const applyForm = document.getElementById('applyForm');
+            if (applyForm) {
+                applyForm.addEventListener('submit', function(e) {
+                    const submitBtn = this.querySelector('button[type="submit"]');
+                    if (submitBtn.disabled) {
+                        e.preventDefault();
+                        return false;
+                    }
+                    submitBtn.disabled = true;
+                    submitBtn.textContent = 'Submitting...';
+                });
+            }
+        });
 
         // Close modal when clicking outside
         window.onclick = function(event) {
             const modal = document.getElementById('applyModal');
             if (event.target == modal) {
-                modal.style.display = 'none';
+                closeApplyModal();
             }
         }
     </script>

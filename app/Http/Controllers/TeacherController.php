@@ -30,18 +30,29 @@ class TeacherController extends Controller
     public function myJobs()
     {
         $teacher = Teacher::where('user_id', Auth::id())->firstOrFail();
-        $applications = Application::where('teacher_id', $teacher->teacher_id)
-            ->with('tuitionOffer')
+        
+        // Get all open jobs with unique offer_id to prevent duplicates
+        $jobs = Post::where('status', 'open')
+            ->distinct('offer_id')
+            ->with(['applications' => function($query) use ($teacher) {
+                $query->where('teacher_id', $teacher->teacher_id);
+            }])
             ->orderByDesc('created_at')
             ->paginate(10);
         
-        return view('teacher.jobs.my-jobs', compact('applications'));
+        return view('teacher.jobs.my-jobs', compact('jobs', 'teacher'));
     }
 
     public function onlineJobs(Request $request)
     {
+        $teacher = Teacher::where('user_id', Auth::id())->firstOrFail();
+        
         $query = Post::where('status', 'open')
-            ->where('preferred_type', 'online');
+            ->where('preferred_type', 'online')
+            ->distinct('offer_id')
+            ->with(['applications' => function($query) use ($teacher) {
+                $query->where('teacher_id', $teacher->teacher_id);
+            }]);
 
         // Apply filters
         if ($request->filled('location')) {
@@ -54,12 +65,18 @@ class TeacherController extends Controller
 
         $jobs = $query->orderByDesc('created_at')->paginate(10);
         
-        return view('teacher.jobs.online', compact('jobs'));
+        return view('teacher.jobs.online', compact('jobs', 'teacher'));
     }
 
     public function allJobs(Request $request)
     {
-        $query = Post::where('status', 'open');
+        $teacher = Teacher::where('user_id', Auth::id())->firstOrFail();
+        
+        $query = Post::where('status', 'open')
+            ->distinct('offer_id')
+            ->with(['applications' => function($query) use ($teacher) {
+                $query->where('teacher_id', $teacher->teacher_id);
+            }]);
 
         // Apply filters
         if ($request->filled('location')) {
@@ -72,7 +89,7 @@ class TeacherController extends Controller
 
         $jobs = $query->orderByDesc('created_at')->paginate(10);
         
-        return view('teacher.jobs.all', compact('jobs'));
+        return view('teacher.jobs.all', compact('jobs', 'teacher'));
     }
 
     public function applyJob(Request $request, $offerId)
@@ -83,7 +100,13 @@ class TeacherController extends Controller
             'message' => 'required|string|max:500'
         ]);
 
-        // Check if already applied
+        // Check if the job exists and is still open
+        $job = Post::where('offer_id', $offerId)->where('status', 'open')->first();
+        if (!$job) {
+            return back()->withErrors(['message' => 'This job is no longer available.']);
+        }
+
+        // Check if already applied (double-check to prevent duplicates)
         $existingApplication = Application::where('offer_id', $offerId)
             ->where('teacher_id', $teacher->teacher_id)
             ->first();
@@ -92,13 +115,29 @@ class TeacherController extends Controller
             return back()->withErrors(['message' => 'You have already applied for this job.']);
         }
 
-        Application::create([
-            'offer_id' => $offerId,
-            'teacher_id' => $teacher->teacher_id,
-            'message' => $request->message,
-            'status' => 'pending'
-        ]);
+        // Check if teacher has enough coins
+        $applicationCost = config('tuition.application_cost', 10);
+        if ($teacher->coins < $applicationCost) {
+            return back()->withErrors(['message' => "Can't apply - Not enough coins. You need {$applicationCost} coins to apply for this job."]);
+        }
 
-        return back()->with('success', 'Application submitted successfully!');
+        try {
+            // Deduct coins from teacher's account
+            $teacher->decrement('coins', $applicationCost);
+
+            // Create application
+            Application::create([
+                'offer_id' => $offerId,
+                'teacher_id' => $teacher->teacher_id,
+                'message' => $request->message,
+                'status' => 'pending'
+            ]);
+
+            return back()->with('success', "Application submitted successfully! {$applicationCost} coins deducted from your wallet. You can now see the full contact details.");
+        } catch (\Exception $e) {
+            // If application creation fails, refund the coins
+            $teacher->increment('coins', $applicationCost);
+            return back()->withErrors(['message' => 'Failed to submit application. Please try again.']);
+        }
     }
 }

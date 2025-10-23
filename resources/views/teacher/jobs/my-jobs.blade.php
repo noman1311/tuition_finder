@@ -33,6 +33,20 @@
         .status-pending { background: #fef3c7; color: #d97706; }
         .status-accepted { background: #d1fae5; color: #059669; }
         .status-rejected { background: #fee2e2; color: #dc2626; }
+        .status-available { background: #e0f2fe; color: #0277bd; }
+        .apply-btn { background: #2563eb; color: white; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer; font-weight: 500; }
+        .apply-btn:hover { background: #1d4ed8; }
+        .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); }
+        .modal-content { background: white; margin: 15% auto; padding: 20px; border-radius: 8px; width: 500px; max-width: 90%; }
+        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .modal-header h3 { margin: 0; }
+        .close { font-size: 24px; cursor: pointer; }
+        .form-group { margin-bottom: 15px; }
+        .form-group label { display: block; font-weight: 500; margin-bottom: 5px; }
+        .form-group textarea { width: 100%; padding: 10px; border: 1px solid #e5e7eb; border-radius: 6px; min-height: 100px; resize: vertical; }
+        .modal-btn { padding: 10px 20px; border: none; border-radius: 6px; cursor: pointer; font-weight: 500; margin-right: 10px; }
+        .modal-btn:not(.secondary) { background: #2563eb; color: white; }
+        .modal-btn.secondary { background: #6b7280; color: white; }
         .job-meta { color: #6b7280; font-size: 14px; margin-bottom: 12px; }
         .job-description { color: #374151; line-height: 1.6; }
         .no-jobs { text-align: center; padding: 60px 20px; color: #6b7280; }
@@ -75,44 +89,100 @@
 
     <div class="container">
         <div class="page-header">
-            <h1>My Job Applications</h1>
-            <p>Track your applications and their status</p>
+            <h1>All Jobs & My Applications</h1>
+            <p>View all available jobs and track your application status</p>
         </div>
 
-        @forelse($applications as $application)
+        @forelse($jobs as $job)
+            @php
+                // Check if teacher has applied for this job
+                $application = $job->applications->where('teacher_id', $teacher->teacher_id)->first();
+                $hasApplied = $application !== null;
+            @endphp
+            
             <div class="job-card">
                 <div class="job-header">
                     <div>
-                        <h3 class="job-title">{{ $application->tuitionOffer->subject }} - {{ $application->tuitionOffer->class_level }}</h3>
-                        <span class="job-subject">{{ $application->tuitionOffer->type }}</span>
+                        <h3 class="job-title">{{ $job->subject }} - {{ $job->class_level }}</h3>
+                        <span class="job-subject">{{ $job->type }}</span>
                     </div>
-                    <span class="status-badge status-{{ $application->status }}">{{ ucfirst($application->status) }}</span>
+                    @if($hasApplied)
+                        <span class="status-badge status-{{ $application->status }}">Applied - {{ ucfirst($application->status) }}</span>
+                    @else
+                        <span class="status-badge status-available">Available</span>
+                    @endif
                 </div>
                 <div class="job-meta">
-                    <i class="fas fa-map-marker-alt"></i> {{ $application->tuitionOffer->location }} • 
-                    <i class="fas fa-clock"></i> {{ $application->tuitionOffer->preferred_type }} • 
-                    <i class="fas fa-dollar-sign"></i> ৳{{ number_format($application->tuitionOffer->salary, 2) }}/hr
+                    <i class="fas fa-map-marker-alt"></i> {{ $job->location }} • 
+                    <i class="fas fa-clock"></i> {{ $job->preferred_type }} • 
+                    <i class="fas fa-dollar-sign"></i> ৳{{ number_format($job->salary, 2) }}/hr •
+                    <i class="fas fa-phone"></i> 
+                    @if($hasApplied)
+                        {{ $job->formatted_phone }}
+                    @else
+                        {{ $job->hidden_phone }}
+                    @endif
                 </div>
-                <div class="job-description">{{ $application->tuitionOffer->description }}</div>
-                @if($application->message)
+                <div class="job-description">{{ $job->description }}</div>
+                
+                @if($hasApplied && $application->message)
                     <div style="margin-top: 12px; padding: 12px; background: #f8fafc; border-radius: 8px;">
                         <strong>Your Application:</strong> {{ $application->message }}
+                        <br><small style="color: #6b7280;">Applied on {{ $application->created_at->format('M d, Y \a\t h:i A') }}</small>
                     </div>
+                @elseif(!$hasApplied)
+                    @if($teacher->coins >= config('tuition.application_cost', 10))
+                        <button class="apply-btn" onclick="openApplyModal({{ $job->offer_id }})" style="margin-top: 12px;">
+                            Apply Now ({{ config('tuition.application_cost', 10) }} coins)
+                        </button>
+                    @else
+                        <div style="margin-top: 12px; padding: 8px 12px; background: #fee2e2; border-radius: 6px; color: #dc2626; font-size: 14px;">
+                            <i class="fas fa-exclamation-triangle"></i> Can't apply - Not enough coins (Need {{ config('tuition.application_cost', 10) }} coins)
+                        </div>
+                    @endif
                 @endif
             </div>
         @empty
             <div class="no-jobs">
                 <i class="fas fa-briefcase" style="font-size: 48px; margin-bottom: 16px; color: #d1d5db;"></i>
-                <h3>No applications yet</h3>
-                <p>Start applying to jobs to see them here.</p>
-                <a href="{{ route('teacher.jobs.all') }}" style="display: inline-block; margin-top: 16px; padding: 10px 20px; background: #2563eb; color: white; text-decoration: none; border-radius: 6px;">
-                    Browse All Jobs
-                </a>
+                <h3>No jobs available</h3>
+                <p>Check back later for new teaching opportunities.</p>
             </div>
         @endforelse
 
         <div class="pagination">
-            {{ $applications->links() }}
+            {{ $jobs->links() }}
+        </div>
+    </div>
+
+    <!-- Apply Modal -->
+    <div id="applyModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Apply for Job</h3>
+                <span class="close" onclick="closeApplyModal()">&times;</span>
+            </div>
+            <div style="background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 8px; padding: 12px; margin-bottom: 20px;">
+                <div style="display: flex; align-items: center; gap: 8px; color: #1e40af;">
+                    <i class="fas fa-info-circle"></i>
+                    <strong>Application Cost: {{ config('tuition.application_cost', 10) }} coins</strong>
+                </div>
+                <p style="margin: 8px 0 0 0; font-size: 14px; color: #1e3a8a;">
+                    After applying, you'll get access to the full phone number and can contact the student directly.
+                </p>
+                <p style="margin: 4px 0 0 0; font-size: 14px; color: #1e3a8a;">
+                    Your current balance: <strong>{{ $teacher->coins }} coins</strong>
+                </p>
+            </div>
+            <form id="applyForm" method="POST">
+                @csrf
+                <div class="form-group">
+                    <label for="message">Application Message</label>
+                    <textarea name="message" id="message" placeholder="Tell the student why you're the right fit for this job..." required></textarea>
+                </div>
+                <button type="submit" class="modal-btn">Submit Application ({{ config('tuition.application_cost', 10) }} coins)</button>
+                <button type="button" class="modal-btn secondary" onclick="closeApplyModal()">Cancel</button>
+            </form>
         </div>
     </div>
 
@@ -128,6 +198,54 @@
             document.addEventListener('click', function(){
                 dropdown.style.display = 'none';
             });
+        }
+
+        // Apply modal functions
+        function openApplyModal(offerId) {
+            // Check if teacher has enough coins (this is also checked server-side)
+            const teacherCoins = {{ $teacher->coins }};
+            const applicationCost = {{ config('tuition.application_cost', 10) }};
+            
+            if (teacherCoins < applicationCost) {
+                alert(`You don't have enough coins to apply. You need ${applicationCost} coins but only have ${teacherCoins} coins.`);
+                return;
+            }
+            
+            const modal = document.getElementById('applyModal');
+            const form = document.getElementById('applyForm');
+            form.action = `/teacher/apply/${offerId}`;
+            modal.style.display = 'block';
+        }
+
+        function closeApplyModal() {
+            const modal = document.getElementById('applyModal');
+            modal.style.display = 'none';
+            document.getElementById('message').value = '';
+            // Re-enable submit button
+            const submitBtn = document.querySelector('#applyForm button[type="submit"]');
+            if (submitBtn) {
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Submit Application';
+            }
+        }
+
+        // Prevent double submission
+        document.getElementById('applyForm').addEventListener('submit', function(e) {
+            const submitBtn = this.querySelector('button[type="submit"]');
+            if (submitBtn.disabled) {
+                e.preventDefault();
+                return false;
+            }
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Submitting...';
+        });
+
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            const modal = document.getElementById('applyModal');
+            if (event.target === modal) {
+                closeApplyModal();
+            }
         }
     </script>
 </body>
