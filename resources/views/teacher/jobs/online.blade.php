@@ -49,6 +49,10 @@
         .pagination a { padding: 8px 16px; margin: 0 4px; background: white; color: #2563eb; text-decoration: none; border-radius: 6px; border: 1px solid #e2e8f0; }
         .pagination a:hover { background: #2563eb; color: white; }
         .pagination .active { background: #2563eb; color: white; }
+        .job-tabs { display: flex; gap: 20px; margin-bottom: 30px; border-bottom: 2px solid #e5e7eb; }
+        .job-tab { padding: 12px 20px; text-decoration: none; color: #6b7280; font-weight: 500; border-bottom: 2px solid transparent; transition: all 0.3s; }
+        .job-tab:hover { color: #2563eb; }
+        .job-tab.active { color: #2563eb; border-bottom-color: #2563eb; }
         .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.5); }
         .modal-content { background-color: #fff; margin: 15% auto; padding: 20px; border-radius: 12px; width: 90%; max-width: 500px; }
         .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
@@ -96,8 +100,14 @@
 
     <div class="container">
         <div class="page-header">
-            <h1>Online Teaching Jobs</h1>
-            <p>Find online teaching opportunities that match your expertise ({{ $jobs->total() }} online jobs available for you to apply)</p>
+            <h1>Jobs</h1>
+            <p>Manage your teaching opportunities</p>
+        </div>
+
+        <div class="job-tabs">
+            <a href="{{ route('teacher.jobs.my') }}" class="job-tab">Applied Jobs</a>
+            <a href="{{ route('teacher.jobs.all') }}" class="job-tab">All Jobs</a>
+            <a href="{{ route('teacher.jobs.online') }}" class="job-tab active">Online Jobs</a>
         </div>
 
         <div class="filters">
@@ -117,47 +127,27 @@
         </div>
 
         @forelse($jobs as $job)
-            @php
-                // Check if teacher has applied for this job
-                $application = $job->applications->where('teacher_id', $teacher->teacher_id)->first();
-                $hasApplied = $application !== null;
-            @endphp
-            
             <div class="job-card">
                 <div class="job-header">
                     <div>
                         <h3 class="job-title">{{ $job->subject }} - {{ $job->class_level }}</h3>
                         <span class="job-subject">{{ $job->type }}</span>
                     </div>
-                    @if($hasApplied)
-                        <span class="status-badge status-{{ $application->status }}">Applied - {{ ucfirst($application->status) }}</span>
-                    @endif
                 </div>
                 <div class="job-meta">
                     <i class="fas fa-map-marker-alt"></i> {{ $job->location }} • 
                     <i class="fas fa-clock"></i> {{ $job->preferred_type }} • 
                     <i class="fas fa-dollar-sign"></i> ৳{{ number_format($job->salary, 2) }}/hr •
-                    <i class="fas fa-phone"></i> 
-                    @if($hasApplied)
-                        {{ $job->formatted_phone }}
-                    @else
-                        {{ $job->hidden_phone }}
-                    @endif
+                    <i class="fas fa-phone"></i> {{ $job->hidden_phone }}
                 </div>
                 <div class="job-description">{{ $job->description }}</div>
-                @if(!$hasApplied)
-                    @if($teacher->coins >= config('tuition.application_cost', 10))
-                        <button class="apply-btn" onclick="openApplyModal({{ $job->offer_id }})">
-                            Apply Now ({{ config('tuition.application_cost', 10) }} coins)
-                        </button>
-                    @else
-                        <div style="margin-top: 12px; padding: 8px 12px; background: #fee2e2; border-radius: 6px; color: #dc2626; font-size: 14px;">
-                            <i class="fas fa-exclamation-triangle"></i> Can't apply - Not enough coins (Need {{ config('tuition.application_cost', 10) }} coins)
-                        </div>
-                    @endif
+                @if($teacher->coins >= config('tuition.application_cost', 10))
+                    <button class="apply-btn" onclick="openApplyModal({{ $job->offer_id }})">
+                        Apply Now ({{ config('tuition.application_cost', 10) }} coins)
+                    </button>
                 @else
-                    <div style="margin-top: 12px; padding: 8px 12px; background: #f8fafc; border-radius: 6px; font-size: 14px; color: #6b7280;">
-                        Applied on {{ $application->created_at->format('M d, Y') }} - Full contact details revealed
+                    <div style="margin-top: 12px; padding: 8px 12px; background: #fee2e2; border-radius: 6px; color: #dc2626; font-size: 14px;">
+                        <i class="fas fa-exclamation-triangle"></i> Can't apply - Not enough coins (Need {{ config('tuition.application_cost', 10) }} coins)
                     </div>
                 @endif
             </div>

@@ -32,28 +32,35 @@ class TeacherController extends Controller
     {
         $teacher = Teacher::where('user_id', Auth::id())->firstOrFail();
         
-        // Get all open jobs with unique offer_id to prevent duplicates
-        $jobs = Post::where('status', 'open')
-            ->distinct('offer_id')
-            ->with(['applications' => function($query) use ($teacher) {
-                $query->where('teacher_id', $teacher->teacher_id);
+        // Get only jobs that the teacher has applied to
+        $applications = Application::where('teacher_id', $teacher->teacher_id)
+            ->with(['tuitionOffer' => function($query) {
+                $query->where('status', 'open'); // Only show applications for open jobs
             }])
             ->orderByDesc('created_at')
             ->paginate(10);
+
+        // Filter out applications where the job is no longer available
+        $applications->getCollection()->transform(function ($application) {
+            return $application->tuitionOffer ? $application : null;
+        })->filter();
         
-        return view('teacher.jobs.my-jobs', compact('jobs', 'teacher'));
+        return view('teacher.jobs.applied-jobs', compact('applications', 'teacher'));
     }
 
     public function onlineJobs(Request $request)
     {
         $teacher = Teacher::where('user_id', Auth::id())->firstOrFail();
         
+        // Get IDs of jobs the teacher has already applied for
+        $appliedJobIds = Application::where('teacher_id', $teacher->teacher_id)
+            ->pluck('offer_id')
+            ->toArray();
+        
         $query = Post::where('status', 'open')
             ->where('preferred_type', 'online')
             ->distinct('offer_id')
-            ->with(['applications' => function($query) use ($teacher) {
-                $query->where('teacher_id', $teacher->teacher_id);
-            }]);
+            ->whereNotIn('offer_id', $appliedJobIds); // Exclude applied jobs
 
         // Apply filters
         if ($request->filled('location')) {
@@ -73,11 +80,14 @@ class TeacherController extends Controller
     {
         $teacher = Teacher::where('user_id', Auth::id())->firstOrFail();
         
+        // Get IDs of jobs the teacher has already applied for
+        $appliedJobIds = Application::where('teacher_id', $teacher->teacher_id)
+            ->pluck('offer_id')
+            ->toArray();
+        
         $query = Post::where('status', 'open')
             ->distinct('offer_id')
-            ->with(['applications' => function($query) use ($teacher) {
-                $query->where('teacher_id', $teacher->teacher_id);
-            }]);
+            ->whereNotIn('offer_id', $appliedJobIds); // Exclude applied jobs
 
         // Apply filters
         if ($request->filled('location')) {
