@@ -62,7 +62,6 @@
                     @auth
                         <li><a href="{{ route('my.posts') }}">MY Posts</a></li>
                         <li><a href="{{ route('requirements.create') }}">Post Requirements</a></li>
-                        <li><a href="{{ route('find.tutors') }}">Find Tutors</a></li>
                         <li><a href="{{ route('notifications.index') }}" class="active">Notifications</a></li>
                     @endauth
                 </ul>

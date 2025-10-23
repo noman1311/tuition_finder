@@ -74,7 +74,4 @@ Route::middleware('auth')->group(function () {
     Route::get('/notifications/recent', [App\Http\Controllers\NotificationController::class, 'getRecent'])->name('notifications.recent');
 });
 
-// Simple placeholders - protected
-Route::middleware('auth')->group(function () {
-    Route::view('/find-tutors', 'find-tutors')->name('find.tutors');
-});
+
