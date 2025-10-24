@@ -74,6 +74,16 @@
                     <li><a href="{{ route('teacher.dashboard') }}">Dashboard</a></li>
                     <li><a href="{{ route('teacher.jobs.my') }}">Jobs</a></li>
                     <li><a href="{{ route('wallet.index') }}" class="active">Wallet</a></li>
+                    <li>
+                        <a href="{{ route('notifications.index') }}">
+                            Notifications
+                            @if(Auth::user()->unread_notifications_count > 0)
+                                <span style="background: #ef4444; color: white; font-size: 10px; padding: 2px 6px; border-radius: 10px; margin-left: 4px;">
+                                    {{ Auth::user()->unread_notifications_count }}
+                                </span>
+                            @endif
+                        </a>
+                    </li>
                     <li><a href="{{ route('teacher.profile.edit') }}">Edit Profile</a></li>
                 </ul>
             </nav>

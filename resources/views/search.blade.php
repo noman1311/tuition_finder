@@ -3,196 +3,15 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>Search Results - TuitionFinder</title>
     
     <!-- Fonts -->
     <link href="https://fonts.bunny.net/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="{{ asset('css/base.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/search.css') }}">
 
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: #f8fafc;
-        }
-
-        .header {
-            background: #fff;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            padding: 20px 0;
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 20px;
-        }
-
-        .search-header {
-            display: flex;
-            align-items: center;
-            gap: 20px;
-            margin-bottom: 30px;
-        }
-
-        .back-btn {
-            color: #2563eb;
-            text-decoration: none;
-            font-weight: 500;
-        }
-
-        .search-results-title {
-            font-size: 1.5rem;
-            font-weight: 600;
-            color: #1f2937;
-        }
-
-        .teachers-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-            gap: 25px;
-            margin-top: 30px;
-        }
-
-        .teacher-card {
-            background: white;
-            border-radius: 12px;
-            padding: 25px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-            transition: transform 0.3s;
-        }
-
-        .teacher-card:hover {
-            transform: translateY(-2px);
-        }
-
-        .teacher-header {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            margin-bottom: 15px;
-        }
-
-        .teacher-avatar {
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            background: #2563eb;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 1.5rem;
-            font-weight: 600;
-        }
-
-        .teacher-info h3 {
-            font-size: 1.2rem;
-            font-weight: 600;
-            color: #1f2937;
-            margin-bottom: 5px;
-        }
-
-        .teacher-location {
-            color: #6b7280;
-            font-size: 0.9rem;
-        }
-
-        .teacher-expertise {
-            margin-bottom: 15px;
-        }
-
-        .expertise-tags {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-        }
-
-        .expertise-tag {
-            background: #dbeafe;
-            color: #2563eb;
-            padding: 4px 12px;
-            border-radius: 20px;
-            font-size: 0.8rem;
-            font-weight: 500;
-        }
-
-        .teacher-bio {
-            color: #6b7280;
-            margin-bottom: 15px;
-            line-height: 1.6;
-        }
-
-        .teacher-footer {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .teacher-rate {
-            font-size: 1.1rem;
-            font-weight: 600;
-            color: #059669;
-        }
-
-        .contact-btn {
-            background: #2563eb;
-            color: white;
-            padding: 8px 16px;
-            border: none;
-            border-radius: 6px;
-            font-weight: 500;
-            cursor: pointer;
-            transition: background 0.3s;
-        }
-
-        .contact-btn:hover {
-            background: #1d4ed8;
-        }
-
-        .no-results {
-            text-align: center;
-            padding: 60px 20px;
-            color: #6b7280;
-        }
-
-        .no-results i {
-            font-size: 4rem;
-            margin-bottom: 20px;
-            color: #d1d5db;
-        }
-
-        .pagination {
-            display: flex;
-            justify-content: center;
-            margin-top: 40px;
-        }
-
-        .pagination a {
-            padding: 8px 16px;
-            margin: 0 4px;
-            background: white;
-            color: #2563eb;
-            text-decoration: none;
-            border-radius: 6px;
-            border: 1px solid #e2e8f0;
-        }
-
-        .pagination a:hover {
-            background: #2563eb;
-            color: white;
-        }
-
-        .pagination .active {
-            background: #2563eb;
-            color: white;
-        }
-    </style>
 </head>
 <body>
     <div class="header">
@@ -227,39 +46,57 @@
                     <div class="teacher-card">
                         <div class="teacher-header">
                             <div class="teacher-avatar">
-                                {{ substr($teacher->name, 0, 1) }}
+                                @if($teacher->image)
+                                    <img src="{{ asset('storage/' . $teacher->image) }}" alt="{{ $teacher->name }}" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
+                                @else
+                                    {{ substr($teacher->name, 0, 1) }}
+                                @endif
                             </div>
                             <div class="teacher-info">
                                 <h3>{{ $teacher->name }}</h3>
                                 <div class="teacher-location">
                                     <i class="fas fa-map-marker-alt"></i> {{ $teacher->location }}
                                 </div>
+                                <div class="teacher-experience">
+                                    <i class="fas fa-graduation-cap"></i> {{ $teacher->experience }} years experience
+                                </div>
                             </div>
                         </div>
 
-                        @if($teacher->expertise)
+                        @if($teacher->subject_expertise)
                             <div class="teacher-expertise">
                                 <div class="expertise-tags">
-                                    @foreach($teacher->expertise as $skill)
+                                    @foreach($teacher->subject_expertise as $skill)
                                         <span class="expertise-tag">{{ $skill }}</span>
                                     @endforeach
                                 </div>
                             </div>
                         @endif
 
-                        @if($teacher->bio)
-                            <div class="teacher-bio">
-                                {{ Str::limit($teacher->bio, 120) }}
+                        @if($teacher->current_education_institution)
+                            <div class="teacher-institution">
+                                <i class="fas fa-university"></i> {{ $teacher->current_education_institution }}
                             </div>
                         @endif
 
+                        @if($teacher->description)
+                            <div class="teacher-bio">
+                                {{ Str::limit($teacher->description, 120) }}
+                            </div>
+                        @endif
+
+                        <div class="teacher-type">
+                            <i class="fas fa-laptop"></i> 
+                            <span class="type-badge type-{{ $teacher->preferred_type }}">
+                                {{ ucfirst($teacher->preferred_type) }} Teaching
+                            </span>
+                        </div>
+
                         <div class="teacher-footer">
-                            @if($teacher->hourly_rate)
-                                <div class="teacher-rate">${{ $teacher->hourly_rate }}/hr</div>
-                            @else
-                                <div class="teacher-rate">Rate on request</div>
-                            @endif
-                            <button class="contact-btn">Contact</button>
+                            <div style="flex: 1;"></div>
+                            <button class="contact-btn" onclick="contactTeacher({{ $teacher->teacher_id }}, '{{ $teacher->name }}')">
+                                Contact Teacher
+                            </button>
                         </div>
                     </div>
                 @endforeach
@@ -273,11 +110,110 @@
                 <i class="fas fa-search"></i>
                 <h3>No tutors found</h3>
                 <p>Try adjusting your search criteria or browse all available tutors.</p>
-                <a href="/" class="btn" style="display: inline-block; margin-top: 20px; padding: 10px 20px; background: #2563eb; color: white; text-decoration: none; border-radius: 6px;">
-                    Browse All Tutors
-                </a>
+                <div style="margin-top: 20px; display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;">
+                    <a href="/search" class="btn" style="display: inline-block; padding: 10px 20px; background: #2563eb; color: white; text-decoration: none; border-radius: 6px;">
+                        Browse All Tutors
+                    </a>
+                    <a href="/" class="btn" style="display: inline-block; padding: 10px 20px; background: #6b7280; color: white; text-decoration: none; border-radius: 6px;">
+                        Back to Home
+                    </a>
+                </div>
             </div>
         @endif
     </div>
+
+    <!-- Contact Modal -->
+    <div id="contactModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; align-items: center; justify-content: center;">
+        <div style="background: white; padding: 30px; border-radius: 12px; max-width: 500px; width: 90%; margin: 20px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                <h3 style="margin: 0; color: #1f2937;">Contact Teacher</h3>
+                <button onclick="closeContactModal()" style="background: none; border: none; font-size: 24px; cursor: pointer; color: #6b7280;">&times;</button>
+            </div>
+            
+            <div id="contactContent">
+                <p style="color: #6b7280; margin-bottom: 20px;">
+                    Send a contact request to <strong id="teacherName"></strong>. 
+                    The teacher will be notified and can choose to reveal your contact information for a small fee.
+                </p>
+                
+                <form id="contactForm">
+                    @csrf
+                    <input type="hidden" id="teacherId" name="teacher_id">
+                    
+                    <div style="margin-bottom: 15px;">
+                        <label style="display: block; margin-bottom: 5px; font-weight: 500; color: #374151;">Your Message</label>
+                        <textarea name="message" rows="4" style="width: 100%; padding: 12px; border: 1px solid #d1d5db; border-radius: 6px; resize: vertical;" placeholder="Introduce yourself and explain what you're looking for..."></textarea>
+                    </div>
+                    
+                    <div style="display: flex; gap: 10px; justify-content: flex-end;">
+                        <button type="button" onclick="closeContactModal()" style="padding: 10px 20px; background: #f3f4f6; color: #374151; border: none; border-radius: 6px; cursor: pointer;">Cancel</button>
+                        <button type="submit" style="padding: 10px 20px; background: #2563eb; color: white; border: none; border-radius: 6px; cursor: pointer;">Send Request</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function contactTeacher(teacherId, teacherName) {
+            document.getElementById('teacherId').value = teacherId;
+            document.getElementById('teacherName').textContent = teacherName;
+            document.getElementById('contactModal').style.display = 'flex';
+        }
+
+        function closeContactModal() {
+            document.getElementById('contactModal').style.display = 'none';
+            document.getElementById('contactForm').reset();
+        }
+
+        document.getElementById('contactForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(this);
+            const submitBtn = this.querySelector('button[type="submit"]');
+            const originalText = submitBtn.textContent;
+            
+            submitBtn.textContent = 'Sending...';
+            submitBtn.disabled = true;
+            
+            fetch('/contact-teacher', {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    document.getElementById('contactContent').innerHTML = `
+                        <div style="text-align: center; padding: 20px;">
+                            <i class="fas fa-check-circle" style="font-size: 3rem; color: #10b981; margin-bottom: 15px;"></i>
+                            <h4 style="color: #1f2937; margin-bottom: 10px;">Request Sent Successfully!</h4>
+                            <p style="color: #6b7280;">The teacher has been notified of your contact request. They will be able to see your message and contact information after paying a small fee.</p>
+                            <button onclick="closeContactModal()" style="margin-top: 15px; padding: 10px 20px; background: #2563eb; color: white; border: none; border-radius: 6px; cursor: pointer;">Close</button>
+                        </div>
+                    `;
+                } else {
+                    alert(data.message || 'An error occurred. Please try again.');
+                    submitBtn.textContent = originalText;
+                    submitBtn.disabled = false;
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('An error occurred. Please try again.');
+                submitBtn.textContent = originalText;
+                submitBtn.disabled = false;
+            });
+        });
+
+        // Close modal when clicking outside
+        document.getElementById('contactModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeContactModal();
+            }
+        });
+    </script>
 </body>
 </html>

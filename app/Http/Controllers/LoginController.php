@@ -22,8 +22,12 @@ class LoginController extends Controller
             'password' => ['required', 'string'],
         ]);
 
-        // Manually attempt using username column
-        $user = User::where('username', $credentials['username'])->first();
+        // Determine if the input is an email or username
+        $loginField = filter_var($credentials['username'], FILTER_VALIDATE_EMAIL) ? 'email' : 'username';
+        
+        // Attempt to find user by either email or username
+        $user = User::where($loginField, $credentials['username'])->first();
+        
         if ($user && $credentials['password'] === $user->password) {
             Auth::login($user, $request->boolean('remember'));
             $request->session()->regenerate();
@@ -46,14 +50,14 @@ class LoginController extends Controller
         }
 
         return back()->withErrors([
-            'username' => 'Invalid credentials.',
+            'username' => 'Invalid username/email or password.',
         ])->onlyInput('username');
     }
 
     public function register(Request $request)
     {
         $data = $request->validate([
-            'name' => ['required', 'string', 'max:100'],
+            'name' => ['required', 'string', 'max:100', 'unique:users,username'],
             'email' => ['required', 'email', 'unique:users,email'],
             'password' => ['required', 'string', 'min:6'],
             'role' => ['required', 'in:student/parent,teacher'],
@@ -61,7 +65,7 @@ class LoginController extends Controller
         ]);
 
         $user = User::create([
-            'username' => $data['email'], // Use email as username
+            'username' => $data['name'], // Use name as username
             'email' => $data['email'],
             'password' => $data['password'], // Plain text as requested
             'role' => $data['role'],

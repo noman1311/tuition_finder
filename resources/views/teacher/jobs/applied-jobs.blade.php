@@ -6,55 +6,9 @@
     <title>Applied Jobs - TuitionFinder</title>
     <link href="https://fonts.bunny.net/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Inter', sans-serif; background: #f8fafc; }
-        .header { background: #fff; box-shadow: 0 2px 4px rgba(0,0,0,0.1); padding: 0 20px; }
-        .header-container { max-width: 1200px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; height: 70px; }
-        .logo { font-size: 24px; font-weight: 700; color: #2563eb; text-decoration: none; }
-        .nav-menu { display: flex; list-style: none; gap: 30px; align-items: center; }
-        .nav-menu a { text-decoration: none; color: #4b5563; font-weight: 500; transition: color 0.3s; }
-        .nav-menu a:hover, .nav-menu a.active { color: #2563eb; }
-        .user-menu { display: flex; align-items: center; gap: 15px; position: relative; }
-        .user-profile { display: flex; align-items: center; gap: 10px; padding: 8px 12px; border-radius: 6px; background: #f1f5f9; cursor: pointer; }
-        .user-avatar { width: 32px; height: 32px; border-radius: 50%; background: #2563eb; display: flex; align-items: center; justify-content: center; color: white; font-weight: 600; }
-        .dropdown { display: none; position: absolute; right: 0; top: 56px; background: #fff; border: 1px solid #e5e7eb; border-radius: 8px; box-shadow: 0 8px 20px rgba(0,0,0,.08); min-width: 180px; z-index: 1000; }
-        .dropdown a, .dropdown button { display: block; width: 100%; padding: 10px 12px; color: #111827; text-decoration: none; background: none; border: none; text-align: left; cursor: pointer; }
-        .dropdown a:hover, .dropdown button:hover { background: #f8fafc; }
-        .container { max-width: 1000px; margin: 40px auto; padding: 0 20px; }
-        .page-header { margin-bottom: 30px; }
-        .page-header h1 { font-size: 28px; color: #1f2937; margin-bottom: 8px; }
-        .page-header p { color: #6b7280; }
-        .job-tabs { display: flex; gap: 20px; margin-bottom: 30px; border-bottom: 2px solid #e5e7eb; }
-        .job-tab { padding: 12px 20px; text-decoration: none; color: #6b7280; font-weight: 500; border-bottom: 2px solid transparent; transition: all 0.3s; }
-        .job-tab:hover { color: #2563eb; }
-        .job-tab.active { color: #2563eb; border-bottom-color: #2563eb; }
-        .job-card { background: #fff; border-radius: 12px; padding: 20px; margin-bottom: 16px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
-        .job-header { display: flex; justify-content: space-between; align-items: start; margin-bottom: 12px; }
-        .job-title { font-size: 18px; font-weight: 600; color: #1f2937; margin-bottom: 4px; }
-        .job-subject { background: #dbeafe; color: #2563eb; padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 500; }
-        .status-badge { padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 500; }
-        .status-pending { background: #fef3c7; color: #d97706; }
-        .status-accepted { background: #d1fae5; color: #059669; }
-        .status-rejected { background: #fee2e2; color: #dc2626; }
-        .job-meta { color: #6b7280; font-size: 14px; margin-bottom: 12px; }
-        .job-description { color: #374151; line-height: 1.6; margin-bottom: 12px; }
-        .application-details { background: #f8fafc; border-radius: 8px; padding: 12px; margin-top: 12px; }
-        .application-details h4 { font-size: 14px; font-weight: 600; color: #1f2937; margin-bottom: 8px; }
-        .application-message { font-style: italic; color: #374151; margin-bottom: 8px; }
-        .application-date { font-size: 12px; color: #6b7280; }
-        .no-jobs { text-align: center; padding: 60px 20px; color: #6b7280; }
-        .pagination { display: flex; justify-content: center; margin-top: 30px; }
-        .pagination a { padding: 8px 16px; margin: 0 4px; background: white; color: #2563eb; text-decoration: none; border-radius: 6px; border: 1px solid #e2e8f0; }
-        .pagination a:hover { background: #2563eb; color: white; }
-        .pagination .active { background: #2563eb; color: white; }
-        @media (max-width: 768px) {
-            .nav-menu { display: none; }
-            .job-header { flex-direction: column; gap: 10px; align-items: flex-start; }
-            .job-tabs { flex-direction: column; gap: 0; }
-            .job-tab { border-bottom: 1px solid #e5e7eb; border-radius: 0; }
-        }
-    </style>
+    <link rel="stylesheet" href="{{ asset('css/base.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/jobs.css') }}">
+
 </head>
 <body>
     <header class="header">
@@ -66,6 +20,16 @@
                     <li><a href="{{ route('teacher.dashboard') }}">Dashboard</a></li>
                     <li><a href="{{ route('teacher.jobs.my') }}" class="active">Jobs</a></li>
                     <li><a href="{{ route('wallet.index') }}">Wallet</a></li>
+                    <li>
+                        <a href="{{ route('notifications.index') }}">
+                            Notifications
+                            @if(Auth::user()->unread_notifications_count > 0)
+                                <span style="background: #ef4444; color: white; font-size: 10px; padding: 2px 6px; border-radius: 10px; margin-left: 4px;">
+                                    {{ Auth::user()->unread_notifications_count }}
+                                </span>
+                            @endif
+                        </a>
+                    </li>
                     <li><a href="{{ route('teacher.profile.edit') }}">Edit Profile</a></li>
                 </ul>
             </nav>

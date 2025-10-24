@@ -1,0 +1,122 @@
+/* TuitionFinder Offers/Posts Pages Styles */
+
+.wrap {
+    max-width: 900px;
+    margin: 40px auto;
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 10px 25px rgba(0,0,0,.06);
+    padding: 24px 28px;
+}
+
+.wrap h1 {
+    margin: 0 0 20px;
+    font-size: 26px;
+    color: #111827;
+}
+
+/* Form Styles */
+.row {
+    margin-bottom: 16px;
+    display: grid;
+    grid-template-columns: 220px 1fr;
+    gap: 12px;
+    align-items: start;
+}
+
+.row label {
+    font-weight: 600;
+    color: #374151;
+    padding-top: 10px;
+}
+
+input[type=text],
+input[type=number],
+textarea,
+select {
+    width: 100%;
+    padding: 12px 14px;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    font-size: 14px;
+}
+
+textarea {
+    min-height: 140px;
+}
+
+.muted {
+    color: #6b7280;
+    font-size: 13px;
+    margin-top: 6px;
+}
+
+.checks {
+    display: flex;
+    gap: 16px;
+}
+
+/* Posts List Styles */
+.wrap.posts-list {
+    max-width: 1000px;
+    padding: 0 20px;
+    background: transparent;
+    box-shadow: none;
+    margin: 40px auto;
+}
+
+.wrap.posts-list h1 {
+    margin: 0 0 16px;
+    font-size: 26px;
+    color: #111827;
+}
+
+.card {
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 6px 16px rgba(0,0,0,.06);
+    padding: 18px 20px;
+    margin-bottom: 14px;
+}
+
+.card .row {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    grid-template-columns: none;
+    margin-bottom: 0;
+}
+
+.tag {
+    background: #dbeafe;
+    color: #1d4ed8;
+    padding: 4px 10px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.card h3 {
+    margin: 8px 0 6px;
+}
+
+.card .muted {
+    margin-top: 0;
+}
+
+.card p {
+    margin-top: 10px;
+    color: #374151;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .row {
+        grid-template-columns: 1fr;
+        gap: 8px;
+    }
+    
+    .row label {
+        padding-top: 0;
+    }
+}

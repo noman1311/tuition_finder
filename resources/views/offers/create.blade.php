@@ -7,38 +7,8 @@
     <title>Post Requirements - TuitionFinder</title>
     <link href="https://fonts.bunny.net/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Inter', sans-serif; background: #f8fafc; }
-        .header { background: #fff; box-shadow: 0 2px 4px rgba(0,0,0,0.1); padding: 0 20px; }
-        .header-container { max-width: 1200px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; height: 70px; }
-        .logo { font-size: 24px; font-weight: 700; color: #2563eb; text-decoration: none; }
-        .nav-menu { display: flex; list-style: none; gap: 30px; align-items: center; }
-        .nav-menu a { text-decoration: none; color: #4b5563; font-weight: 500; transition: color 0.3s; }
-        .nav-menu a:hover, .nav-menu a.active { color: #2563eb; }
-        .user-menu { display: flex; align-items: center; gap: 15px; position: relative; }
-        .user-profile { display: flex; align-items: center; gap: 10px; padding: 8px 12px; border-radius: 6px; background: #f1f5f9; cursor: pointer; }
-        .user-avatar { width: 32px; height: 32px; border-radius: 50%; background: #2563eb; display: flex; align-items: center; justify-content: center; color: white; font-weight: 600; }
-        .dropdown { display: none; position: absolute; right: 0; top: 56px; background: #fff; border: 1px solid #e5e7eb; border-radius: 8px; box-shadow: 0 8px 20px rgba(0,0,0,.08); min-width: 180px; z-index: 1000; }
-        .dropdown a, .dropdown button { display: block; width: 100%; padding: 10px 12px; color: #111827; text-decoration: none; background: none; border: none; text-align: left; cursor: pointer; }
-        .dropdown a:hover, .dropdown button:hover { background: #f8fafc; }
-        .wrap { max-width: 900px; margin: 40px auto; background: #fff; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,.06); padding: 24px 28px; }
-        h1 { margin: 0 0 20px; font-size: 26px; color: #111827; }
-        .row { margin-bottom: 16px; display: grid; grid-template-columns: 220px 1fr; gap: 12px; align-items: start; }
-        label { font-weight: 600; color: #374151; padding-top: 10px; }
-        input[type=text], input[type=number], textarea, select { width: 100%; padding: 12px 14px; border: 1px solid #e5e7eb; border-radius: 8px; font-size: 14px; }
-        textarea { min-height: 140px; }
-        .muted { color: #6b7280; font-size: 13px; margin-top: 6px; }
-        .checks { display: flex; gap: 16px; }
-        .btn { padding: 12px 16px; background: #2563eb; color: #fff; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; }
-        .btn:hover { background: #1d4ed8; }
-        .error { color: #b91c1c; background: #fee2e2; border: 1px solid #fecaca; padding: 10px 12px; border-radius: 8px; margin-bottom: 14px; font-size: 14px; }
-        .success { color: #065f46; background: #d1fae5; border: 1px solid #a7f3d0; padding: 10px 12px; border-radius: 8px; margin-bottom: 14px; font-size: 14px; }
-        @media (max-width: 768px) {
-            .nav-menu { display: none; }
-            .row { grid-template-columns: 1fr; gap: 8px; }
-        }
-    </style>
+    <link rel="stylesheet" href="{{ asset('css/base.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/offers.css') }}">
 </head>
 <body>
     <header class="header">

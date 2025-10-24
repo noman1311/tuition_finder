@@ -18,6 +18,12 @@ use App\Http\Controllers\OfferController;
 Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 Route::get('/search', [App\Http\Controllers\HomeController::class, 'search'])->name('search');
 
+// Contact teacher route - Protected
+Route::middleware('auth')->group(function () {
+    Route::post('/contact-teacher', [App\Http\Controllers\HomeController::class, 'contactTeacher'])->name('contact.teacher');
+    Route::post('/reveal-contact', [App\Http\Controllers\NotificationController::class, 'revealContact'])->name('reveal.contact');
+});
+
 // Auth routes
 Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [LoginController::class, 'login'])->name('login.post');

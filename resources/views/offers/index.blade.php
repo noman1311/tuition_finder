@@ -6,31 +6,8 @@
     <title>My Posts - TuitionFinder</title>
     <link href="https://fonts.bunny.net/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Inter', sans-serif; background: #f8fafc; }
-        .header { background: #fff; box-shadow: 0 2px 4px rgba(0,0,0,0.1); padding: 0 20px; }
-        .header-container { max-width: 1200px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; height: 70px; }
-        .logo { font-size: 24px; font-weight: 700; color: #2563eb; text-decoration: none; }
-        .nav-menu { display: flex; list-style: none; gap: 30px; align-items: center; }
-        .nav-menu a { text-decoration: none; color: #4b5563; font-weight: 500; transition: color 0.3s; }
-        .nav-menu a:hover, .nav-menu a.active { color: #2563eb; }
-        .user-menu { display: flex; align-items: center; gap: 15px; position: relative; }
-        .user-profile { display: flex; align-items: center; gap: 10px; padding: 8px 12px; border-radius: 6px; background: #f1f5f9; cursor: pointer; }
-        .user-avatar { width: 32px; height: 32px; border-radius: 50%; background: #2563eb; display: flex; align-items: center; justify-content: center; color: white; font-weight: 600; }
-        .dropdown { display: none; position: absolute; right: 0; top: 56px; background: #fff; border: 1px solid #e5e7eb; border-radius: 8px; box-shadow: 0 8px 20px rgba(0,0,0,.08); min-width: 180px; z-index: 1000; }
-        .dropdown a, .dropdown button { display: block; width: 100%; padding: 10px 12px; color: #111827; text-decoration: none; background: none; border: none; text-align: left; cursor: pointer; }
-        .dropdown a:hover, .dropdown button:hover { background: #f8fafc; }
-        .wrap { max-width: 1000px; margin: 40px auto; padding: 0 20px; }
-        h1 { margin: 0 0 16px; font-size: 26px; color: #111827; }
-        .card { background: #fff; border-radius: 12px; box-shadow: 0 6px 16px rgba(0,0,0,.06); padding: 18px 20px; margin-bottom: 14px; }
-        .row { display: flex; justify-content: space-between; gap: 12px; }
-        .tag { background:#dbeafe; color:#1d4ed8; padding: 4px 10px; border-radius: 999px; font-size: 12px; font-weight: 600; }
-        .muted { color:#6b7280; font-size: 13px; }
-        @media (max-width: 768px) {
-            .nav-menu { display: none; }
-        }
-    </style>
+    <link rel="stylesheet" href="{{ asset('css/base.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/offers.css') }}">
 </head>
 <body>
     <header class="header">
@@ -78,7 +55,7 @@
         </div>
     </header>
 
-    <div class="wrap">
+    <div class="wrap posts-list">
         <h1>My Posts</h1>
         @forelse ($offers as $offer)
             <div class="card">

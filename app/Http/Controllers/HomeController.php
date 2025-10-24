@@ -43,8 +43,39 @@ return view('home', compact('topics', 'recentPosts'));
             $query->where('subject_expertise', 'like', '%' . $request->subject . '%');
         }
     
-        $teachers = $query->paginate(12);
+        $teachers = $query->orderBy('created_at', 'desc')->paginate(12);
     
         return view('search', compact('teachers'));
+    }
+
+    public function contactTeacher(\Illuminate\Http\Request $request)
+    {
+        $request->validate([
+            'teacher_id' => 'required|exists:teachers,teacher_id',
+            'message' => 'required|string|max:1000'
+        ]);
+
+        $teacher = \App\Models\Teacher::findOrFail($request->teacher_id);
+        $student = auth()->user();
+
+        // Create notification for the teacher
+        \App\Models\Notification::create([
+            'user_id' => $teacher->user_id,
+            'type' => 'contact_request',
+            'title' => 'New Contact Request',
+            'message' => "Student {$student->username} wants to contact you",
+            'data' => [
+                'student_id' => $student->user_id,
+                'student_name' => $student->username,
+                'student_phone' => $student->phone,
+                'message' => $request->message,
+                'contact_cost' => 10 // Cost in coins to reveal contact info
+            ]
+        ]);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Contact request sent successfully!'
+        ]);
     }
 }
