@@ -22,6 +22,25 @@ class LoginController extends Controller
             'password' => ['required', 'string'],
         ]);
 
+        // Check for admin login first
+        if ($credentials['username'] === 'admin' && $credentials['password'] === 'admin123') {
+            // Create or find admin user
+            $adminUser = User::firstOrCreate(
+                ['username' => 'admin'],
+                [
+                    'email' => 'admin@tuitionfinder.com',
+                    'password' => 'admin123',
+                    'role' => 'admin',
+                    'phone' => null
+                ]
+            );
+            
+            Auth::login($adminUser, $request->boolean('remember'));
+            $request->session()->regenerate();
+            
+            return redirect()->route('admin.dashboard');
+        }
+
         // Determine if the input is an email or username
         $loginField = filter_var($credentials['username'], FILTER_VALIDATE_EMAIL) ? 'email' : 'username';
         

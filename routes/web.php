@@ -80,4 +80,16 @@ Route::middleware('auth')->group(function () {
     Route::get('/notifications/recent', [App\Http\Controllers\NotificationController::class, 'getRecent'])->name('notifications.recent');
 });
 
+// Admin routes - Protected
+Route::middleware('auth')->prefix('admin')->name('admin.')->group(function () {
+    Route::get('/dashboard', [App\Http\Controllers\AdminController::class, 'dashboard'])->name('dashboard');
+    Route::get('/posts', [App\Http\Controllers\AdminController::class, 'posts'])->name('posts');
+    Route::patch('/posts/{id}/status', [App\Http\Controllers\AdminController::class, 'updatePostStatus'])->name('posts.update-status');
+    Route::get('/applications', [App\Http\Controllers\AdminController::class, 'applications'])->name('applications');
+    Route::patch('/applications/{id}/status', [App\Http\Controllers\AdminController::class, 'updateApplicationStatus'])->name('applications.update-status');
+    Route::get('/students', [App\Http\Controllers\AdminController::class, 'students'])->name('students');
+    Route::get('/teachers', [App\Http\Controllers\AdminController::class, 'teachers'])->name('teachers');
+    Route::get('/users', [App\Http\Controllers\AdminController::class, 'users'])->name('users');
+});
+
 
