@@ -19,9 +19,19 @@
             <nav>
                 <ul class="nav-menu">
                     @auth
-                        <li><a href="{{ route('my.posts') }}">MY Posts</a></li>
-                        <li><a href="{{ route('requirements.create') }}">Post Requirements</a></li>
-                        <li><a href="{{ route('notifications.index') }}" class="active">Notifications</a></li>
+                        @if(Auth::user()->role === 'teacher' && session('current_view') === 'teacher')
+                            <!-- Teacher Navigation -->
+                            <li><a href="{{ route('teacher.dashboard') }}">Dashboard</a></li>
+                            <li><a href="{{ route('teacher.jobs.my') }}">Jobs</a></li>
+                            <li><a href="{{ route('wallet.index') }}">Wallet</a></li>
+                            <li><a href="{{ route('notifications.index') }}" class="active">Notifications</a></li>
+                            <li><a href="{{ route('teacher.profile.edit') }}">Edit Profile</a></li>
+                        @else
+                            <!-- Student Navigation -->
+                            <li><a href="{{ route('my.posts') }}">MY Posts</a></li>
+                            <li><a href="{{ route('requirements.create') }}">Post Requirements</a></li>
+                            <li><a href="{{ route('notifications.index') }}" class="active">Notifications</a></li>
+                        @endif
                     @endauth
                 </ul>
             </nav>
@@ -33,15 +43,23 @@
                 </div>
                 <div class="dropdown" id="userDropdown">
                     @if(Auth::user()->role === 'teacher')
-                        <a href="{{ route('teacher.dashboard') }}">Teacher Dashboard</a>
-                        <a href="{{ route('switch.to.student') }}">Switch to Student View</a>
-                        <a href="{{ route('teacher.profile.edit') }}">Edit Profile</a>
-                    @else
-                        <a href="{{ route('student.profile.edit') }}">Edit Profile</a>
+                        <div style="padding:8px 12px; background:#f8fafc; border-bottom:1px solid #e5e7eb; font-size:12px; color:#6b7280; font-weight:600;">DASHBOARD</div>
+                        <a href="{{ route('teacher.dashboard') }}" style="display:block; padding:10px 12px; color:#111827; text-decoration:none;">Teacher Dashboard</a>
+                        @if(session('current_view') === 'teacher')
+                            <a href="{{ route('switch.to.student') }}" style="display:block; padding:10px 12px; color:#111827; text-decoration:none;">Switch to Student View</a>
+                        @else
+                            <a href="{{ route('switch.to.teacher') }}" style="display:block; padding:10px 12px; color:#111827; text-decoration:none;">Switch to Teacher View</a>
+                        @endif
+                        <div style="border-top:1px solid #e5e7eb; margin:4px 0;"></div>
                     @endif
-                    <form method="POST" action="{{ route('logout') }}">
+                    @if(Auth::user()->role === 'student/parent' || (Auth::user()->role === 'teacher' && session('current_view') === 'student'))
+                        <a href="{{ route('student.profile.edit') }}" style="display:block; padding:10px 12px; color:#111827; text-decoration:none;">Edit profile</a>
+                    @elseif(Auth::user()->role === 'teacher')
+                        <a href="{{ route('teacher.profile.edit') }}" style="display:block; padding:10px 12px; color:#111827; text-decoration:none;">Edit profile</a>
+                    @endif
+                    <form method="POST" action="{{ route('logout') }}" style="margin:0;">
                         @csrf
-                        <button type="submit">Logout</button>
+                        <button type="submit" style="width:100%; text-align:left; padding:10px 12px; background:none; border:none; cursor:pointer; color:#111827;">Logout</button>
                     </form>
                 </div>
             </div>
