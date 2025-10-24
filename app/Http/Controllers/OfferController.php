@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Post; // tuition_offers model
 use App\Models\Student;
+use App\Models\User;
 
 class OfferController extends Controller
 {
@@ -13,11 +14,22 @@ class OfferController extends Controller
     {
         $userId = Auth::id();
         $student = Student::where('user_id', $userId)->first();
-        $offers = Post::when($student, function ($q) use ($student) {
-            $q->where('student_id', $student->student_id);
-        }, function ($q) { $q->whereRaw('1=0'); })
-        ->orderByDesc('created_at')
-        ->paginate(10);
+        
+        // If no student profile exists, create one with default values
+        if (!$student) {
+            $user = Auth::user();
+            $student = Student::create([
+                'user_id' => Auth::id(),
+                'name' => $user->username,
+                'gender' => 'male', // Default value
+                'class_level' => 'Not specified',
+                'location' => 'Not specified',
+            ]);
+        }
+        
+        $offers = Post::where('student_id', $student->student_id)
+            ->orderByDesc('created_at')
+            ->paginate(10);
 
         return view('offers.index', compact('offers'));
     }
@@ -40,9 +52,19 @@ class OfferController extends Controller
             'salary' => ['required','numeric'],
         ]);
 
+        $user = Auth::user();
         $student = Student::where('user_id', Auth::id())->first();
+        
+        // If user is a teacher or doesn't have a student profile, create a temporary student record
         if (!$student) {
-            return back()->withErrors(['msg' => 'Create a student profile first.'])->withInput();
+            // For teachers or users without student profiles, create a minimal student record
+            $student = Student::create([
+                'user_id' => Auth::id(),
+                'name' => $user->username, // Use the username as name
+                'gender' => 'male', // Default value, can be updated later
+                'class_level' => $data['class_level'],
+                'location' => $data['location'],
+            ]);
         }
 
         Post::create([

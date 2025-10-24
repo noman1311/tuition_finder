@@ -150,13 +150,39 @@ class LoginController extends Controller
 
     public function editStudentProfile()
     {
-        $student = Student::where('user_id', Auth::id())->firstOrFail();
+        $user = Auth::user();
+        $student = Student::where('user_id', Auth::id())->first();
+        
+        // If no student profile exists, create one with default values
+        if (!$student) {
+            $student = Student::create([
+                'user_id' => Auth::id(),
+                'name' => $user->username,
+                'gender' => 'male', // Default value
+                'class_level' => 'Not specified',
+                'location' => 'Not specified',
+            ]);
+        }
+        
         return view('auth.student-profile-edit', compact('student'));
     }
 
     public function updateStudentProfile(Request $request)
     {
-        $student = Student::where('user_id', Auth::id())->firstOrFail();
+        $user = Auth::user();
+        $student = Student::where('user_id', Auth::id())->first();
+        
+        // If no student profile exists, create one
+        if (!$student) {
+            $student = Student::create([
+                'user_id' => Auth::id(),
+                'name' => $user->username,
+                'gender' => 'male',
+                'class_level' => 'Not specified',
+                'location' => 'Not specified',
+            ]);
+        }
+        
         $data = $request->validate([
             'name' => ['required', 'string', 'max:100'],
             'gender' => ['required', 'in:male,female'],
