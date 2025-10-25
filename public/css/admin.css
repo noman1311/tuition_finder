@@ -8,7 +8,7 @@
 
 .admin-container h1 {
     font-size: 28px;
-    color: #1f2937;
+    color: #11224E;
     margin-bottom: 30px;
 }
 
@@ -39,13 +39,13 @@
     justify-content: center;
     font-size: 20px;
     color: white;
-    background: #2563eb;
+    background: #F87B1B;
 }
 
 .stat-info h3 {
     font-size: 24px;
     font-weight: 700;
-    color: #1f2937;
+    color: #11224E;
     margin-bottom: 4px;
 }
 
@@ -71,7 +71,7 @@
 
 .activity-card h2 {
     font-size: 18px;
-    color: #1f2937;
+    color: #11224E;
     margin-bottom: 20px;
     display: flex;
     align-items: center;
@@ -97,7 +97,7 @@
 .activity-info h4 {
     font-size: 14px;
     font-weight: 600;
-    color: #1f2937;
+    color: #11224E;
     margin-bottom: 4px;
 }
 
@@ -114,14 +114,14 @@
 
 .view-all-btn {
     display: inline-block;
-    color: #2563eb;
+    color: #F87B1B;
     text-decoration: none;
     font-weight: 500;
     font-size: 14px;
 }
 
 .view-all-btn:hover {
-    color: #1d4ed8;
+    color: #e6691a;
 }
 
 .no-data {
@@ -140,8 +140,8 @@
 }
 
 .status-open {
-    background: #d1fae5;
-    color: #059669;
+    background: #CBD99B;
+    color: #11224E;
 }
 
 .status-closed {
@@ -155,8 +155,8 @@
 }
 
 .status-completed {
-    background: #dbeafe;
-    color: #2563eb;
+    background: #CBD99B;
+    color: #11224E;
 }
 
 .status-pending {
@@ -165,8 +165,8 @@
 }
 
 .status-accepted {
-    background: #d1fae5;
-    color: #059669;
+    background: #CBD99B;
+    color: #11224E;
 }
 
 .status-rejected {
@@ -194,12 +194,12 @@
 }
 
 .admin-table th {
-    background: #f8fafc;
+    background: #EEEEEE;
     padding: 15px;
     text-align: left;
     font-weight: 600;
-    color: #374151;
-    border-bottom: 1px solid #e5e7eb;
+    color: #11224E;
+    border-bottom: 1px solid #CBD99B;
 }
 
 .admin-table td {
@@ -209,7 +209,7 @@
 }
 
 .admin-table tr:hover {
-    background: #f8fafc;
+    background: #EEEEEE;
 }
 
 /* Filters */
@@ -235,7 +235,7 @@
     display: block;
     font-weight: 600;
     margin-bottom: 6px;
-    color: #374151;
+    color: #11224E;
 }
 
 .filter-group input,
@@ -249,7 +249,7 @@
 
 .filter-btn {
     padding: 10px 20px;
-    background: #2563eb;
+    background: #F87B1B;
     color: white;
     border: none;
     border-radius: 6px;
@@ -258,7 +258,7 @@
 }
 
 .filter-btn:hover {
-    background: #1d4ed8;
+    background: #e6691a;
 }
 
 /* Action Buttons */
@@ -273,13 +273,13 @@
 }
 
 .action-btn.primary {
-    background: #2563eb;
+    background: #F87B1B;
     color: white;
 }
 
 .action-btn.success {
-    background: #059669;
-    color: white;
+    background: #CBD99B;
+    color: #11224E;
 }
 
 .action-btn.warning {

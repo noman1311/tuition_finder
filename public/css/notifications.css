@@ -15,7 +15,7 @@
 
 .page-header h1 {
     font-size: 28px;
-    color: #1f2937;
+    color: #11224E;
 }
 
 .notification-item {
@@ -28,8 +28,8 @@
 }
 
 .notification-item.unread {
-    border-left: 4px solid #2563eb;
-    background: #f8fafc;
+    border-left: 4px solid #F87B1B;
+    background: #EEEEEE;
 }
 
 .notification-header {
@@ -42,7 +42,7 @@
 .notification-title {
     font-size: 16px;
     font-weight: 600;
-    color: #1f2937;
+    color: #11224E;
     margin-bottom: 4px;
 }
 
@@ -58,7 +58,7 @@
 }
 
 .notification-details {
-    background: #f8fafc;
+    background: #EEEEEE;
     border-radius: 8px;
     padding: 12px;
     margin-top: 12px;
@@ -67,7 +67,7 @@
 .notification-details h4 {
     font-size: 14px;
     font-weight: 600;
-    color: #1f2937;
+    color: #11224E;
     margin-bottom: 8px;
 }
 
@@ -78,8 +78,8 @@
 }
 
 .application-message {
-    background: #eff6ff;
-    border-left: 3px solid #2563eb;
+    background: #CBD99B;
+    border-left: 3px solid #F87B1B;
     padding: 12px;
     margin-top: 8px;
     font-style: italic;

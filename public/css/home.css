@@ -14,7 +14,7 @@ body {
 
 /* Hero Section */
 .hero {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, #11224E 0%, #F87B1B 100%);
     color: white;
     padding: 80px 0;
     text-align: center;
@@ -64,11 +64,11 @@ body {
 
 .search-input:focus {
     outline: none;
-    border-color: #2563eb;
+    border-color: #F87B1B;
 }
 
 .search-btn {
-    background: #2563eb;
+    background: #F87B1B;
     color: white;
     border: none;
     padding: 15px 30px;
@@ -80,7 +80,7 @@ body {
 }
 
 .search-btn:hover {
-    background: #1d4ed8;
+    background: #e6691a;
 }
 
 /* Sticky Search Bar */
@@ -140,7 +140,7 @@ body {
     font-size: 2.5rem;
     font-weight: 700;
     margin-bottom: 20px;
-    color: #1f2937;
+    color: #11224E;
 }
 
 .section-subtitle {
@@ -158,7 +158,7 @@ body {
 }
 
 .topic-card {
-    background: #f8fafc;
+    background: white;
     padding: 25px;
     border-radius: 12px;
     text-align: center;
@@ -168,27 +168,27 @@ body {
 }
 
 .topic-card:hover {
-    background: #e0f2fe;
-    border-color: #2563eb;
+    background: #CBD99B;
+    border-color: #F87B1B;
     transform: translateY(-2px);
 }
 
 .topic-icon {
     font-size: 2.5rem;
-    color: #2563eb;
+    color: #F87B1B;
     margin-bottom: 15px;
 }
 
 .topic-name {
     font-size: 1.1rem;
     font-weight: 600;
-    color: #1f2937;
+    color: #11224E;
 }
 
 /* Recent Posts Section */
 .posts-section {
     padding: 60px 0;
-    background: #f8fafc;
+    background: #EEEEEE;
 }
 
 .posts-grid {
@@ -220,13 +220,13 @@ body {
 .post-title {
     font-size: 1.2rem;
     font-weight: 600;
-    color: #1f2937;
+    color: #11224E;
     margin-bottom: 5px;
 }
 
 .post-subject {
-    background: #dbeafe;
-    color: #2563eb;
+    background: #CBD99B;
+    color: #11224E;
     padding: 4px 12px;
     border-radius: 20px;
     font-size: 0.9rem;
@@ -255,7 +255,7 @@ body {
 
 .post-budget {
     font-weight: 600;
-    color: #059669;
+    color: #F87B1B;
 }
 
 /* Responsive Design */

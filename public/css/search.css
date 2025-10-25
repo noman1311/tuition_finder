@@ -8,7 +8,7 @@
 
 body {
     font-family: 'Inter', sans-serif;
-    background-color: #f8fafc;
+    background-color: #EEEEEE;
 }
 
 .header {
@@ -31,7 +31,7 @@ body {
 }
 
 .back-btn {
-    color: #2563eb;
+    color: #F87B1B;
     text-decoration: none;
     font-weight: 500;
 }
@@ -39,7 +39,7 @@ body {
 .search-results-title {
     font-size: 1.5rem;
     font-weight: 600;
-    color: #1f2937;
+    color: #11224E;
 }
 
 .teachers-grid {
@@ -72,7 +72,7 @@ body {
     width: 60px;
     height: 60px;
     border-radius: 50%;
-    background: #2563eb;
+    background: #11224E;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -84,7 +84,7 @@ body {
 .teacher-info h3 {
     font-size: 1.2rem;
     font-weight: 600;
-    color: #1f2937;
+    color: #11224E;
     margin-bottom: 5px;
 }
 
@@ -94,14 +94,14 @@ body {
 }
 
 .teacher-experience {
-    color: #059669;
+    color: #F87B1B;
     font-size: 0.9rem;
     font-weight: 500;
     margin-top: 2px;
 }
 
 .teacher-institution {
-    color: #7c3aed;
+    color: #F87B1B;
     font-size: 0.9rem;
     margin-bottom: 10px;
     font-weight: 500;
@@ -122,8 +122,8 @@ body {
 }
 
 .type-online {
-    background: #dcfce7;
-    color: #166534;
+    background: #CBD99B;
+    color: #11224E;
 }
 
 .type-offline {
@@ -132,8 +132,8 @@ body {
 }
 
 .type-both {
-    background: #e0e7ff;
-    color: #3730a3;
+    background: #EEEEEE;
+    color: #11224E;
 }
 
 .teacher-coins {
@@ -153,8 +153,8 @@ body {
 }
 
 .expertise-tag {
-    background: #dbeafe;
-    color: #2563eb;
+    background: #CBD99B;
+    color: #11224E;
     padding: 4px 12px;
     border-radius: 20px;
     font-size: 0.8rem;
@@ -176,11 +176,11 @@ body {
 .teacher-rate {
     font-size: 1.1rem;
     font-weight: 600;
-    color: #059669;
+    color: #F87B1B;
 }
 
 .contact-btn {
-    background: #2563eb;
+    background: #F87B1B;
     color: white;
     padding: 8px 16px;
     border: none;
@@ -191,7 +191,7 @@ body {
 }
 
 .contact-btn:hover {
-    background: #1d4ed8;
+    background: #e6691a;
 }
 
 .no-results {

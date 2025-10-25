@@ -2,7 +2,7 @@
 
 body {
     font-family: 'Inter', sans-serif;
-    background: #f8fafc;
+    background: #EEEEEE;
     margin: 0;
     display: flex;
     align-items: center;
@@ -22,30 +22,14 @@ body {
 h1 {
     margin: 0 0 20px;
     font-size: 24px;
-    color: #111827;
+    color: #11224E;
     text-align: center;
-}
-
-.google-btn {
-    width: 100%;
-    padding: 12px;
-    background: #4285f4;
-    color: white;
-    border: none;
-    border-radius: 8px;
-    font-weight: 600;
-    margin-bottom: 20px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
 }
 
 .tabs {
     display: flex;
     margin-bottom: 20px;
-    border-bottom: 1px solid #e5e7eb;
+    border-bottom: 1px solid #CBD99B;
 }
 
 .tab {
@@ -56,12 +40,12 @@ h1 {
     border: none;
     background: none;
     font-weight: 600;
-    color: #6b7280;
+    color: #11224E;
 }
 
 .tab.active {
-    color: #2563eb;
-    border-bottom: 2px solid #2563eb;
+    color: #F87B1B;
+    border-bottom: 2px solid #F87B1B;
 }
 
 .form-section {
@@ -80,13 +64,13 @@ label {
     display: block;
     font-weight: 600;
     margin-bottom: 6px;
-    color: #374151;
+    color: #11224E;
 }
 
 input, select {
     width: 100%;
     padding: 12px 14px;
-    border: 1px solid #e5e7eb;
+    border: 1px solid #CBD99B;
     border-radius: 8px;
     font-size: 14px;
     box-sizing: border-box;
@@ -95,7 +79,7 @@ input, select {
 .btn {
     width: 100%;
     padding: 12px 16px;
-    background: #2563eb;
+    background: #F87B1B;
     border: none;
     color: #fff;
     border-radius: 8px;
@@ -104,7 +88,7 @@ input, select {
 }
 
 .btn:hover {
-    background: #1d4ed8;
+    background: #e6691a;
 }
 
 .error {
@@ -118,9 +102,9 @@ input, select {
 }
 
 .success {
-    color: #065f46;
-    background: #d1fae5;
-    border: 1px solid #a7f3d0;
+    color: #11224E;
+    background: #CBD99B;
+    border: 1px solid #a8c47a;
     padding: 10px 12px;
     border-radius: 8px;
     margin-bottom: 14px;
@@ -133,6 +117,6 @@ input, select {
 }
 
 .back-link a {
-    color: #2563eb;
+    color: #11224E;
     text-decoration: none;
 }

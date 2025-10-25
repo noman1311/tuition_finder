@@ -17,3 +17,5 @@ yarn-error.log
 /.idea
 /.vscode
 *.md
+exp.txt
+docs/DB_WRITE_MAP.txt

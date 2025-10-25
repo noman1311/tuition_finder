@@ -8,7 +8,7 @@
 
 body {
     font-family: 'Inter', sans-serif;
-    background: #f8fafc;
+    background: #EEEEEE;
 }
 
 /* Header Styles */
@@ -30,7 +30,7 @@ body {
 .logo {
     font-size: 24px;
     font-weight: 700;
-    color: #2563eb;
+    color: #11224E;
     text-decoration: none;
 }
 
@@ -43,14 +43,14 @@ body {
 
 .nav-menu a {
     text-decoration: none;
-    color: #4b5563;
+    color: #11224E;
     font-weight: 500;
     transition: color 0.3s;
 }
 
 .nav-menu a:hover,
 .nav-menu a.active {
-    color: #2563eb;
+    color: #F87B1B;
 }
 
 .user-menu {
@@ -66,7 +66,7 @@ body {
     gap: 10px;
     padding: 8px 12px;
     border-radius: 6px;
-    background: #f1f5f9;
+    background: #CBD99B;
     cursor: pointer;
 }
 
@@ -74,7 +74,7 @@ body {
     width: 32px;
     height: 32px;
     border-radius: 50%;
-    background: #2563eb;
+    background: #11224E;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -110,7 +110,7 @@ body {
 
 .dropdown a:hover,
 .dropdown button:hover {
-    background: #f8fafc;
+    background: #EEEEEE;
 }
 
 /* Common Button Styles */
@@ -126,22 +126,22 @@ body {
 }
 
 .btn-primary {
-    background: #2563eb;
+    background: #F87B1B;
     color: white;
 }
 
 .btn-primary:hover {
-    background: #1d4ed8;
+    background: #e6691a;
 }
 
 .btn-outline {
     background: transparent;
-    color: #2563eb;
-    border: 1px solid #2563eb;
+    color: #11224E;
+    border: 1px solid #11224E;
 }
 
 .btn-outline:hover {
-    background: #2563eb;
+    background: #11224E;
     color: white;
 }
 
@@ -160,9 +160,9 @@ body {
 }
 
 .alert-success {
-    background: #d1fae5;
-    color: #065f46;
-    border: 1px solid #a7f3d0;
+    background: #CBD99B;
+    color: #11224E;
+    border: 1px solid #a8c47a;
 }
 
 .alert-error {
@@ -173,7 +173,7 @@ body {
 
 /* Common Badge Styles */
 .unread-badge {
-    background: #ef4444;
+    background: #F87B1B;
     color: white;
     font-size: 10px;
     padding: 2px 6px;
@@ -191,19 +191,19 @@ body {
     padding: 8px 16px;
     margin: 0 4px;
     background: white;
-    color: #2563eb;
+    color: #11224E;
     text-decoration: none;
     border-radius: 6px;
-    border: 1px solid #e2e8f0;
+    border: 1px solid #CBD99B;
 }
 
 .pagination a:hover {
-    background: #2563eb;
+    background: #F87B1B;
     color: white;
 }
 
 .pagination .active {
-    background: #2563eb;
+    background: #11224E;
     color: white;
 }
 
