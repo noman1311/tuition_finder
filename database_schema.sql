@@ -121,9 +121,10 @@ CREATE TABLE notifications (
 
 
 
--- Insert sample data
+-- Insert sample data (passwords will be hashed by Laravel)
+-- Note: Admin password is 'admin123', sample user passwords are 'password'
 INSERT INTO users (username, password, role, email, phone) VALUES
-('admin', 'admin123', 'admin', 'admin@tuitionfinder.com', NULL),
+('admin', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'admin', 'admin@tuitionfinder.com', NULL),
 ('john_student', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'student/parent', 'john@example.com', '+1234567890'),
 ('sarah_teacher', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'teacher', 'sarah@example.com', '+1234567891'),
 ('mike_teacher', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'teacher', 'mike@example.com', '+1234567892');

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use App\Models\User;
 use App\Models\Student;
 use App\Models\Teacher;
@@ -22,19 +23,23 @@ class LoginController extends Controller
             'password' => ['required', 'string'],
         ]);
 
-        // Check for admin login first
+        // Admin login check
         if ($credentials['username'] === 'admin' && $credentials['password'] === 'admin123') {
-            // Create or find admin user
-            $adminUser = User::firstOrCreate(
-                ['username' => 'admin'],
-                [
+            // Find or create admin user
+            $adminUser = User::where('username', 'admin')->first();
+            
+            if (!$adminUser) {
+                // Create new admin user
+                $adminUser = User::create([
+                    'username' => 'admin',
                     'email' => 'admin@tuitionfinder.com',
-                    'password' => 'admin123',
+                    'password' => Hash::make('admin123'),
                     'role' => 'admin',
                     'phone' => null
-                ]
-            );
+                ]);
+            }
             
+            // Login the admin user
             Auth::login($adminUser, $request->boolean('remember'));
             $request->session()->regenerate();
             
@@ -47,7 +52,7 @@ class LoginController extends Controller
         // Attempt to find user by either email or username
         $user = User::where($loginField, $credentials['username'])->first();
         
-        if ($user && $credentials['password'] === $user->password) {
+        if ($user && Hash::check($credentials['password'], $user->password)) {
             Auth::login($user, $request->boolean('remember'));
             $request->session()->regenerate();
             
@@ -86,7 +91,7 @@ class LoginController extends Controller
         $user = User::create([
             'username' => $data['name'], // Use name as username
             'email' => $data['email'],
-            'password' => $data['password'], // Plain text as requested
+            'password' => Hash::make($data['password']), // Hash the password
             'role' => $data['role'],
             'phone' => $data['phone'],
         ]);
